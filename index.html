@@ -245,8 +245,58 @@ tr:hover td{background:rgba(255,255,255,0.02)}
   </div>
 </div>
 
-<!-- ==================== SLIDE 5: KYC SCREENER - RESULTADOS BATCH ==================== -->
+<!-- ==================== SLIDE 5: KYC SCREENER - CASO FRAUDE OCR ==================== -->
 <div class="slide" id="s5">
+  <h2>KYC Screener — Deteccion de Inconsistencia OCR: Solicitud #118669</h2>
+  <div class="grid-2">
+    <div>
+      <div class="card" style="padding:14px;margin-bottom:14px;border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.04)">
+        <table style="font-size:12px">
+          <tr><td>Solicitante</td><td>K. P. G. (anonimizado), 18 anos</td></tr>
+          <tr><td>Sueldo declarado</td><td>S/ 1,327.00</td></tr>
+          <tr><td>Score Equifax</td><td class="red">457 — Riesgo Alto</td></tr>
+          <tr><td>Score admision</td><td class="red">Sin score (NULL)</td></tr>
+          <tr><td>Arbol de decision</td><td class="red">No aplicado</td></tr>
+          <tr><td>Monto financiado</td><td>S/ 5,799.00 (24 cuotas)</td></tr>
+          <tr><td>Status</td><td class="red">Aprobado, firmado, ENTREGADO</td></tr>
+          <tr class="total-row"><td>Veredicto</td><td><span class="badge badge-red">NO APTO</span> — 7 banderas rojas</td></tr>
+        </table>
+      </div>
+      <h4 style="color:#ef4444;margin-bottom:8px">3 personas distintas en 1 solicitud</h4>
+      <table style="font-size:11px">
+        <tr><th>Documento</th><th>A nombre de</th><th>DNI</th><th>Check</th></tr>
+        <tr><td>Solicitud</td><td>Kevin P.G.</td><td>61366925</td><td>—</td></tr>
+        <tr><td>Boleta de pago</td><td class="red">Diana G.M.</td><td class="red">40627252</td><td class="red">MISMATCH</td></tr>
+        <tr><td>ESSALUD</td><td class="red">Diana G.M.</td><td class="red">40627252</td><td class="red">MISMATCH</td></tr>
+        <tr><td>Equifax familiar</td><td class="red">Diana G.M.</td><td class="red">40627252</td><td class="red">MISMATCH</td></tr>
+        <tr><td>Recibo de luz</td><td class="red">Alfredo P.Q.</td><td class="red">29728016</td><td class="red">MISMATCH</td></tr>
+        <tr><td>Equifax solicitante</td><td>Kevin P.G.</td><td>61366925</td><td class="green">MATCH</td></tr>
+      </table>
+    </div>
+    <div>
+      <h4 style="color:#93c5fd;margin-bottom:8px">9 Documentos OCR Analizados</h4>
+      <table style="font-size:11px">
+        <tr><th>Doc</th><th>Tipo</th><th>Hallazgo</th></tr>
+        <tr><td>Boleta pago</td><td>Sustento ingresos</td><td class="red">Nombre: DIANA G.M. (familiar, no solicitante)</td></tr>
+        <tr><td>ESSALUD</td><td>Seguro salud</td><td class="red">Asegurada: DIANA G.M. — empleo no es del solicitante</td></tr>
+        <tr><td>Equifax Est.</td><td>Central riesgo</td><td class="yellow">Score 457, sin historial, S/ 0 gasto</td></tr>
+        <tr><td>Equifax Fam.</td><td>Central riesgo</td><td>DIANA G.M. Score 835 (irrelevante para eval.)</td></tr>
+        <tr><td>Recibo luz</td><td>Domicilio</td><td class="red">Titular: ALFREDO P.Q. — 3ra persona</td></tr>
+        <tr><td>OSIPTEL</td><td>Lineas telef.</td><td>2 lineas a nombre del solicitante</td></tr>
+        <tr><td>AFP</td><td>Previsional</td><td>OCR parcial</td></tr>
+        <tr><td>RCI</td><td>Calculo interno</td><td>12.21% — basado en ingreso no verificado</td></tr>
+        <tr><td>Estudios</td><td>Video</td><td>No procesable por OCR</td></tr>
+      </table>
+      <div class="card" style="margin-top:12px;padding:12px;border-color:rgba(239,68,68,0.2);background:rgba(239,68,68,0.03)">
+        <h4 style="font-size:12px" class="red">Por que este caso es critico</h4>
+        <p style="font-size:11px">Solicitante de 18 anos presento boleta de pago y ESSALUD de un familiar (madre probable) como sustento propio de ingresos. El recibo de luz pertenece a una tercera persona. La solicitud fue aprobada sin score y sin arbol de decision, con un equipo de S/ 5,799 ya entregado. <strong>El cruce automatico de OCR habria detectado esto antes de la aprobacion.</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 6: KYC SCREENER - RESULTADOS BATCH ==================== -->
+<div class="slide" id="s6">
   <h2>KYC Screener — Resultados del Batch (150 casos)</h2>
   <div class="grid-2">
     <div>
@@ -283,8 +333,8 @@ tr:hover td{background:rgba(255,255,255,0.02)}
   </div>
 </div>
 
-<!-- ==================== SLIDE 6: STATEMENT AUDITOR - OVERVIEW ==================== -->
-<div class="slide" id="s6">
+<!-- ==================== SLIDE 7: STATEMENT AUDITOR - OVERVIEW ==================== -->
+<div class="slide" id="s7">
   <h2><span class="badge badge-yellow" style="font-size:14px;margin-right:8px">4/10</span> Statement Auditor — Auditoria de EEFF</h2>
   <div class="grid-2">
     <div>
@@ -321,8 +371,8 @@ tr:hover td{background:rgba(255,255,255,0.02)}
   </div>
 </div>
 
-<!-- ==================== SLIDE 7: STATEMENT AUDITOR - P&L ==================== -->
-<div class="slide" id="s7">
+<!-- ==================== SLIDE 8: STATEMENT AUDITOR - P&L ==================== -->
+<div class="slide" id="s8">
   <h2>Statement Auditor — P&L Comparativo y Balance</h2>
   <div class="grid-2">
     <div>
@@ -350,8 +400,8 @@ tr:hover td{background:rgba(255,255,255,0.02)}
   </div>
 </div>
 
-<!-- ==================== SLIDE 8: VALUATION REVIEWER ==================== -->
-<div class="slide" id="s8">
+<!-- ==================== SLIDE 9: VALUATION REVIEWER ==================== -->
+<div class="slide" id="s9">
   <h2><span class="badge badge-yellow" style="font-size:14px;margin-right:8px">4/10</span> Valuation Reviewer — Valorizacion BaldeCash</h2>
   <div style="margin-bottom:20px">
     <div class="ff-row">
@@ -402,8 +452,8 @@ tr:hover td{background:rgba(255,255,255,0.02)}
   </div>
 </div>
 
-<!-- ==================== SLIDE 9: PITCH AGENT (Desestimado) ==================== -->
-<div class="slide" id="s9">
+<!-- ==================== SLIDE 10: PITCH AGENT (Desestimado) ==================== -->
+<div class="slide" id="s10">
   <h2><span class="badge badge-gray" style="font-size:14px;margin-right:8px">Desestimado</span> Pitch Agent</h2>
   <div class="grid-2">
     <div>
@@ -437,8 +487,8 @@ tr:hover td{background:rgba(255,255,255,0.02)}
   </div>
 </div>
 
-<!-- ==================== SLIDE 10: FINANCIAL ANALYSIS (Desestimado) ==================== -->
-<div class="slide" id="s10">
+<!-- ==================== SLIDE 11: FINANCIAL ANALYSIS (Desestimado) ==================== -->
+<div class="slide" id="s11">
   <h2><span class="badge badge-gray" style="font-size:14px;margin-right:8px">Desestimado</span> Financial Analysis (Core)</h2>
   <div class="grid-2">
     <div>
@@ -476,8 +526,8 @@ tr:hover td{background:rgba(255,255,255,0.02)}
   </div>
 </div>
 
-<!-- ==================== SLIDE 11: CONCLUSIONES ==================== -->
-<div class="slide" id="s11">
+<!-- ==================== SLIDE 12: CONCLUSIONES ==================== -->
+<div class="slide" id="s12">
   <h2>Conclusiones y Proximos Pasos</h2>
   <div class="grid-2">
     <div>
@@ -525,7 +575,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 <!-- NAV -->
 <div class="nav">
   <button onclick="prev()">&larr;</button>
-  <span class="counter" id="counter">1 / 11</span>
+  <span class="counter" id="counter">1 / 12</span>
   <button onclick="next()">&rarr;</button>
 </div>
 
