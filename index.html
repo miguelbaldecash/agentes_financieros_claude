@@ -304,12 +304,13 @@ tr:hover td{background:rgba(255,255,255,0.02)}
       <div class="chart-container"><canvas id="chartRisk"></canvas></div>
       <div class="section-divider" style="margin-top:16px">FPD 30+ por Nivel de Riesgo</div>
       <table>
-        <tr><th>Nivel</th><th class="num">Casos</th><th class="num">Con FPD</th><th class="num">FPD SI</th><th class="num">FPD NO</th><th class="num">Tasa FPD</th></tr>
+        <tr><th>Nivel</th><th class="num">Casos</th><th class="num">Medibles *</th><th class="num">Impago 1ra cuota **</th><th class="num">Pago OK</th><th class="num">Tasa FPD</th></tr>
         <tr><td><span class="badge badge-green">BAJO</span></td><td class="num">131</td><td class="num">119</td><td class="num red">4</td><td class="num">115</td><td class="num red">3.4%</td></tr>
         <tr><td><span class="badge badge-yellow">MEDIO</span></td><td class="num">64</td><td class="num">57</td><td class="num">0</td><td class="num">57</td><td class="num green">0.0%</td></tr>
         <tr><td><span class="badge badge-red">ALTO</span></td><td class="num">5</td><td class="num">4</td><td class="num">0</td><td class="num">4</td><td class="num green">0.0%</td></tr>
         <tr class="total-row"><td>Total</td><td class="num">200</td><td class="num">180</td><td class="num">4</td><td class="num">176</td><td class="num">2.2%</td></tr>
       </table>
+      <p style="font-size:10px;color:#6b7280;margin-top:8px">* Medibles: solicitudes con al menos 2 meses de vida en cartera (las demas son muy recientes para medir FPD)<br>** FPD 30+ (First Payment Default): cliente que no pago su primera cuota y acumulo mas de 30 dias de atraso</p>
     </div>
     <div>
       <h3>Hallazgo: Scoring no correlaciona con FPD</h3>
