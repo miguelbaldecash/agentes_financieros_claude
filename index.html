@@ -191,8 +191,62 @@ tr:hover td{background:rgba(255,255,255,0.02)}
   </div>
 </div>
 
-<!-- ==================== SLIDE 4: KYC SCREENER - RESULTADOS BATCH ==================== -->
+<!-- ==================== SLIDE 4: KYC SCREENER - CASO OCR ==================== -->
 <div class="slide" id="s4">
+  <h2>KYC Screener — Caso con Analisis OCR: Solicitud #97830</h2>
+  <div class="grid-2">
+    <div>
+      <div class="card" style="padding:14px;margin-bottom:14px;border-color:rgba(34,197,94,0.3)">
+        <table style="font-size:12px">
+          <tr><td>Solicitante</td><td>B. J. P. (anonimizado), 19 anos</td></tr>
+          <tr><td>Ubicacion</td><td>Puente Viru, La Libertad</td></tr>
+          <tr><td>Sueldo neto declarado</td><td class="green">S/ 1,811.00</td></tr>
+          <tr><td>RCI (sistema)</td><td class="green">29.77% (max 30%)</td></tr>
+          <tr><td>Score Equifax</td><td class="yellow">500 — Riesgo Alto (sin historial previo)</td></tr>
+          <tr><td>Documentos con OCR</td><td>12 documentos analizados</td></tr>
+          <tr><td>FPD 30+</td><td class="green">NO — al dia 4 meses</td></tr>
+          <tr class="total-row"><td>Veredicto</td><td><span class="badge badge-green">APTO</span> — 11/12 criterios cumplidos</td></tr>
+        </table>
+      </div>
+      <h4 style="color:#93c5fd;margin-bottom:8px">Cruce de Consistencia (7 fuentes)</h4>
+      <table style="font-size:11px">
+        <tr><th>Dato</th><th>Solicitud</th><th>OCR Docs</th><th>Check</th></tr>
+        <tr><td>Nombre</td><td>Brayan J.P.</td><td>JACINTO PAREDES B.E. (4 boletas + Equifax + matricula)</td><td class="green">MATCH</td></tr>
+        <tr><td>DNI</td><td>72218476</td><td>72218476 (Equifax)</td><td class="green">MATCH</td></tr>
+        <tr><td>Celular</td><td>932265559</td><td>932265559 (matricula UPN)</td><td class="green">MATCH</td></tr>
+        <tr><td>Ingreso</td><td>S/ 1,811</td><td>S/ 1,818 (suma 4 boletas)</td><td class="green">MATCH (0.4%)</td></tr>
+        <tr><td>Empleo</td><td>TAL S.A.</td><td>TAL S.A. (boletas) + AFP activa 18m</td><td class="green">MATCH</td></tr>
+        <tr><td>Estudios</td><td>Estudiante</td><td>UPN Ing. Industrial 2026-1</td><td class="green">MATCH</td></tr>
+        <tr><td>Ubicacion</td><td>Puente Viru</td><td>Viru (matricula + recibo luz)</td><td class="green">MATCH</td></tr>
+      </table>
+    </div>
+    <div>
+      <h4 style="color:#93c5fd;margin-bottom:8px">12 Documentos OCR Analizados</h4>
+      <table style="font-size:11px">
+        <tr><th>Doc</th><th>Tipo</th><th>Dato Clave Extraido</th></tr>
+        <tr><td>Boleta 1</td><td>Boleta pago</td><td>S/ 432.08 — TAL S.A. (08/02/2026)</td></tr>
+        <tr><td>Boleta 2</td><td>Boleta pago</td><td>S/ 474.62 — Bono asistencia S/ 48 (15/02)</td></tr>
+        <tr><td>Boleta 3</td><td>Boleta pago</td><td>S/ 421.54 (22/02/2026)</td></tr>
+        <tr><td>Boleta 4</td><td>Boleta pago</td><td>S/ 489.97 — Horas extras S/ 70.40 (01/03)</td></tr>
+        <tr><td>Recibo luz</td><td>Servicio</td><td>S/ 48.40 — periodo 01/2026, Viru</td></tr>
+        <tr><td>Matricula</td><td>Constancia</td><td>UPN, Ing. Industrial, 20 creditos, virtual</td></tr>
+        <tr><td>Equifax</td><td>Central riesgo</td><td>Score 500, sin Infocorp, sin deuda castigada</td></tr>
+        <tr><td>AFP</td><td>Previsional</td><td>Integra, activo desde 09/2024, aporte 02/2026</td></tr>
+        <tr><td>RCI</td><td>Calculo interno</td><td>29.77%, cuota S/ 169, D/Y 1.82</td></tr>
+        <tr><td>Contrato</td><td>Prestamo</td><td>OCR parcial (pendiente firma)</td></tr>
+        <tr><td>Cronograma</td><td>Pagos</td><td>OCR parcial</td></tr>
+        <tr><td>Contrato v3</td><td>Prestamo</td><td>OCR parcial</td></tr>
+      </table>
+      <div class="card" style="margin-top:12px;padding:12px;border-color:rgba(34,197,94,0.2)">
+        <h4 style="font-size:12px" class="green">Por que este caso es APTO</h4>
+        <p style="font-size:11px">Ingreso verificado via 4 boletas semanales (S/ 1,818 vs S/ 1,811 declarado). Empleo formal confirmado por AFP activa 18 meses. Matricula universitaria vigente. RCI 29.77% dentro de politica. Score Equifax bajo por falta de historial, no por comportamiento negativo. <strong>Post-desembolso: al dia 4 meses, 0 DPD.</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 5: KYC SCREENER - RESULTADOS BATCH ==================== -->
+<div class="slide" id="s5">
   <h2>KYC Screener — Resultados del Batch (150 casos)</h2>
   <div class="grid-2">
     <div>
@@ -229,8 +283,8 @@ tr:hover td{background:rgba(255,255,255,0.02)}
   </div>
 </div>
 
-<!-- ==================== SLIDE 5: STATEMENT AUDITOR - OVERVIEW ==================== -->
-<div class="slide" id="s5">
+<!-- ==================== SLIDE 6: STATEMENT AUDITOR - OVERVIEW ==================== -->
+<div class="slide" id="s6">
   <h2><span class="badge badge-yellow" style="font-size:14px;margin-right:8px">4/10</span> Statement Auditor — Auditoria de EEFF</h2>
   <div class="grid-2">
     <div>
@@ -267,8 +321,8 @@ tr:hover td{background:rgba(255,255,255,0.02)}
   </div>
 </div>
 
-<!-- ==================== SLIDE 6: STATEMENT AUDITOR - P&L ==================== -->
-<div class="slide" id="s6">
+<!-- ==================== SLIDE 7: STATEMENT AUDITOR - P&L ==================== -->
+<div class="slide" id="s7">
   <h2>Statement Auditor — P&L Comparativo y Balance</h2>
   <div class="grid-2">
     <div>
@@ -296,8 +350,8 @@ tr:hover td{background:rgba(255,255,255,0.02)}
   </div>
 </div>
 
-<!-- ==================== SLIDE 7: VALUATION REVIEWER ==================== -->
-<div class="slide" id="s7">
+<!-- ==================== SLIDE 8: VALUATION REVIEWER ==================== -->
+<div class="slide" id="s8">
   <h2><span class="badge badge-yellow" style="font-size:14px;margin-right:8px">4/10</span> Valuation Reviewer — Valorizacion BaldeCash</h2>
   <div style="margin-bottom:20px">
     <div class="ff-row">
@@ -348,8 +402,8 @@ tr:hover td{background:rgba(255,255,255,0.02)}
   </div>
 </div>
 
-<!-- ==================== SLIDE 8: PITCH AGENT (Desestimado) ==================== -->
-<div class="slide" id="s8">
+<!-- ==================== SLIDE 9: PITCH AGENT (Desestimado) ==================== -->
+<div class="slide" id="s9">
   <h2><span class="badge badge-gray" style="font-size:14px;margin-right:8px">Desestimado</span> Pitch Agent</h2>
   <div class="grid-2">
     <div>
@@ -383,8 +437,8 @@ tr:hover td{background:rgba(255,255,255,0.02)}
   </div>
 </div>
 
-<!-- ==================== SLIDE 9: FINANCIAL ANALYSIS (Desestimado) ==================== -->
-<div class="slide" id="s9">
+<!-- ==================== SLIDE 10: FINANCIAL ANALYSIS (Desestimado) ==================== -->
+<div class="slide" id="s10">
   <h2><span class="badge badge-gray" style="font-size:14px;margin-right:8px">Desestimado</span> Financial Analysis (Core)</h2>
   <div class="grid-2">
     <div>
@@ -422,8 +476,8 @@ tr:hover td{background:rgba(255,255,255,0.02)}
   </div>
 </div>
 
-<!-- ==================== SLIDE 10: CONCLUSIONES ==================== -->
-<div class="slide" id="s10">
+<!-- ==================== SLIDE 11: CONCLUSIONES ==================== -->
+<div class="slide" id="s11">
   <h2>Conclusiones y Proximos Pasos</h2>
   <div class="grid-2">
     <div>
@@ -471,7 +525,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 <!-- NAV -->
 <div class="nav">
   <button onclick="prev()">&larr;</button>
-  <span class="counter" id="counter">1 / 10</span>
+  <span class="counter" id="counter">1 / 11</span>
   <button onclick="next()">&rarr;</button>
 </div>
 
