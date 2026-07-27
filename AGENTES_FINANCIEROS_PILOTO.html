@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agentes Financieros — Piloto BaldeCash</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#0a0a0a;color:#e0e0e0;overflow:hidden}
+.slide{display:none;width:100vw;height:100vh;padding:50px 70px;position:relative;overflow-y:auto}
+.slide.active{display:flex;flex-direction:column}
+.nav{position:fixed;bottom:20px;right:36px;z-index:100;display:flex;gap:10px;align-items:center}
+.nav button{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-family:'Inter';transition:0.2s}
+.nav button:hover{background:rgba(255,255,255,0.2)}
+.nav .counter{color:rgba(255,255,255,0.4);font-size:12px}
+.progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#3b82f6,#8b5cf6);transition:width 0.4s;z-index:100}
+h1{font-size:44px;font-weight:800;line-height:1.1;letter-spacing:-1.5px}
+h2{font-size:32px;font-weight:700;line-height:1.2;letter-spacing:-1px;margin-bottom:20px}
+h3{font-size:20px;font-weight:600;margin-bottom:12px;color:#93c5fd}
+h4{font-size:15px;font-weight:600;margin-bottom:6px;color:#a5b4fc}
+p{font-size:14px;line-height:1.6;color:#b0b0b0}
+.subtitle{font-size:18px;color:#93c5fd;font-weight:400;margin-top:10px}
+.tag{display:inline-block;background:rgba(59,130,246,0.15);color:#60a5fa;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:500;margin-right:6px}
+.green{color:#22c55e}.red{color:#ef4444}.yellow{color:#eab308}.dim{color:#6b7280}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:rgba(59,130,246,0.12);color:#93c5fd;padding:8px 12px;text-align:left;font-weight:600;border-bottom:1px solid rgba(255,255,255,0.1)}
+td{padding:7px 12px;border-bottom:1px solid rgba(255,255,255,0.05)}
+tr:hover td{background:rgba(255,255,255,0.02)}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.bold-row td{font-weight:600;background:rgba(59,130,246,0.06)}
+.total-row td{font-weight:700;border-top:2px solid rgba(59,130,246,0.3);color:#fff}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.grid-5{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+.card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:20px}
+.metric-card{text-align:center;padding:16px}
+.metric-card .value{font-size:28px;font-weight:800;color:#fff}
+.metric-card .label{font-size:12px;color:#6b7280;margin-top:4px}
+.metric-card.highlight{border-color:rgba(59,130,246,0.3);background:rgba(59,130,246,0.06)}
+.metric-card.highlight .value{color:#60a5fa}
+.chart-container{position:relative;width:100%;max-height:300px}
+.badge{display:inline-block;padding:3px 10px;border-radius:4px;font-size:11px;font-weight:600}
+.badge-red{background:rgba(239,68,68,0.15);color:#ef4444}
+.badge-yellow{background:rgba(234,179,8,0.15);color:#eab308}
+.badge-green{background:rgba(34,197,94,0.15);color:#22c55e}
+.badge-blue{background:rgba(59,130,246,0.15);color:#60a5fa}
+.badge-gray{background:rgba(107,114,128,0.15);color:#9ca3af}
+.cover{justify-content:center;align-items:center;text-align:center;background:radial-gradient(ellipse at 30% 50%,rgba(59,130,246,0.08) 0%,transparent 60%)}
+.cover .logo{font-size:13px;letter-spacing:6px;text-transform:uppercase;color:#6b7280;margin-bottom:20px}
+.agent-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:10px}
+.agent-card .agent-name{font-size:16px;font-weight:700;color:#fff}
+.agent-card .agent-desc{font-size:12px;color:#9ca3af;line-height:1.5}
+.agent-card .agent-score{font-size:32px;font-weight:800;margin:4px 0}
+.agent-card .agent-verdict{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px}
+.agent-card.desestimado{border-color:rgba(107,114,128,0.2);opacity:0.6}
+.agent-card.potencial-alto{border-color:rgba(34,197,94,0.3);background:rgba(34,197,94,0.04)}
+.agent-card.potencial-medio{border-color:rgba(234,179,8,0.3);background:rgba(234,179,8,0.04)}
+.section-divider{font-size:11px;text-transform:uppercase;letter-spacing:3px;color:#4b5563;margin:20px 0 10px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.ff-row{display:flex;align-items:center;margin-bottom:12px}
+.ff-label{width:180px;font-size:13px;font-weight:500;flex-shrink:0}
+.ff-bar-wrap{flex:1;position:relative;height:26px;background:rgba(255,255,255,0.03);border-radius:6px}
+.ff-bar{position:absolute;height:100%;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#fff}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+
+<!-- ==================== SLIDE 1: COVER ==================== -->
+<div class="slide cover active" id="s1">
+  <div class="logo">BALDECASH</div>
+  <h1>Agentes Financieros<br>Resultados del Piloto</h1>
+  <p class="subtitle">5 agentes de IA evaluados para operaciones financieras</p>
+  <div style="margin-top:32px">
+    <span class="tag">Anthropic Financial Services</span>
+    <span class="tag">Claude Code</span>
+    <span class="tag">Julio 2026</span>
+  </div>
+  <p style="margin-top:50px;font-size:12px;color:#4b5563">Presione <kbd style="background:rgba(255,255,255,0.1);padding:2px 8px;border-radius:4px">&rarr;</kbd> para avanzar</p>
+</div>
+
+<!-- ==================== SLIDE 2: RESUMEN 5 AGENTES ==================== -->
+<div class="slide" id="s2">
+  <h2>Resumen del Piloto — 5 Agentes</h2>
+  <div class="grid-5" style="margin-bottom:24px">
+
+    <div class="agent-card potencial-medio" style="border-color:rgba(34,197,94,0.3);background:rgba(34,197,94,0.04)">
+      <div class="agent-name">KYC Screener</div>
+      <div class="agent-desc">Evalua solicitudes de credito contra politica de admision real. Cruza 2 DBs, analiza OCR, Equifax, Keynua, verificaciones.</div>
+      <div class="agent-score green">6/10</div>
+      <div class="agent-verdict green">Potencial implementacion</div>
+    </div>
+
+    <div class="agent-card potencial-medio">
+      <div class="agent-name">Statement Auditor</div>
+      <div class="agent-desc">Audita EEFF contra PCGE y NIIF/NIC. Genera memo ejecutivo + informe detallado con Excel.</div>
+      <div class="agent-score yellow">4/10</div>
+      <div class="agent-verdict yellow">Potencial implementacion</div>
+    </div>
+
+    <div class="agent-card potencial-medio">
+      <div class="agent-name">Valuation Reviewer</div>
+      <div class="agent-desc">Valoriza BaldeCash con DCF, comps, precedents, NAV. Football field y modelo financiero.</div>
+      <div class="agent-score yellow">4/10</div>
+      <div class="agent-verdict yellow">Potencial implementacion</div>
+    </div>
+
+    <div class="agent-card desestimado">
+      <div class="agent-name">Pitch Agent</div>
+      <div class="agent-desc">Genera pitch decks y materiales para inversores con data de la DB.</div>
+      <div class="agent-score dim">--</div>
+      <div class="agent-verdict dim">Desestimado</div>
+    </div>
+
+    <div class="agent-card desestimado">
+      <div class="agent-name">Financial Analysis</div>
+      <div class="agent-desc">Toolkit de skills: /dcf, /comps, /lbo, /3-statement-model, /audit-xls.</div>
+      <div class="agent-score dim">--</div>
+      <div class="agent-verdict dim">Desestimado</div>
+    </div>
+  </div>
+
+  <div class="card" style="padding:16px">
+    <table>
+      <tr><th style="width:20%">Agente</th><th style="width:15%">Veredicto</th><th style="width:10%">Score</th><th>Resultado del piloto</th></tr>
+      <tr><td><strong>KYC Screener</strong></td><td><span class="badge badge-green">Implementar</span></td><td class="num green">6/10</td>
+        <td>Evaluacion de 150 solicitudes aprobadas cruzando 2 bases de datos (Aurora + MySQL). Scoring de riesgo con 6 dimensiones: perfil, capacidad de pago, historial, documentacion (OCR + cruce DNI), verificaciones (Keynua + laboral), y controles (Equifax + arbol de decision). Usa politica de admision real extraida de la tabla arbol_decision. FPD: 116 loans con data, 2 con mora 30+ en primer pago (1.7%).</td></tr>
+      <tr><td><strong>Statement Auditor</strong></td><td><span class="badge badge-yellow">Evaluar</span></td><td class="num yellow">4/10</td>
+        <td>Auditoria exhaustiva de EEFF 2025-2026. Detecto 8 hallazgos (3 criticos: depreciacion no registrada, COGS omitido, descuadre dic-2025). Genera 2 versiones (ejecutivo + contador) y Excel. Limitado por calidad de data contable.</td></tr>
+      <tr><td><strong>Valuation Reviewer</strong></td><td><span class="badge badge-yellow">Evaluar</span></td><td class="num yellow">4/10</td>
+        <td>Valorizacion USD 3.5M-10M (central USD 6.2M) con 4 metodologias. Util como referencia interna pero insuficiente para uso externo sin auditoria independiente.</td></tr>
+      <tr><td><strong>Pitch Agent</strong></td><td><span class="badge badge-gray">Desestimado</span></td><td class="num dim">--</td>
+        <td>Output correcto pero no agrega valor diferencial. Un pitch requiere narrativa humana y contexto estrategico que el agente no puede capturar autonomamente.</td></tr>
+      <tr><td><strong>Financial Analysis</strong></td><td><span class="badge badge-gray">Desestimado</span></td><td class="num dim">--</td>
+        <td>Skills genericos (/dcf, /comps) ya cubiertos por el Valuation Reviewer. El 3-statement model tiene valor pero es complementario, no standalone.</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 3: KYC SCREENER - OVERVIEW ==================== -->
+<div class="slide" id="s3">
+  <h2><span class="badge badge-green" style="font-size:14px;margin-right:8px">6/10</span> KYC Screener — Evaluacion de Solicitudes</h2>
+  <div class="grid-2">
+    <div>
+      <h3>Que hace (v3)</h3>
+      <p>Cruza 2 bases de datos (Aurora PostgreSQL + MySQL CashSys), analiza documentos via OCR, valida identidad con Keynua, consulta Equifax, y evalua contra la <strong>politica real</strong> extraida de la tabla arbol_decision.</p>
+      <div class="section-divider">6 dimensiones de analisis</div>
+      <table>
+        <tr><td><span class="badge badge-blue">D1</span> Perfil demografico</td><td>Edad, sueldo, ocupacion</td></tr>
+        <tr><td><span class="badge badge-blue">D2</span> Capacidad de pago</td><td>RCI vs politica real (arbol decision), pension/sueldo</td></tr>
+        <tr><td><span class="badge badge-blue">D3</span> Historial interno</td><td>Solicitudes lifetime, ratio rechazo</td></tr>
+        <tr><td><span class="badge badge-blue">D4</span> Documentacion + OCR</td><td>Docs subidos, OCR parseado, <strong>cruce DNI doc vs DNI solicitante</strong></td></tr>
+        <tr><td><span class="badge badge-blue">D5</span> Validacion identidad</td><td><strong>Keynua</strong> (biometrico), verificacion laboral</td></tr>
+        <tr><td><span class="badge badge-blue">D6</span> Controles externos</td><td><strong>Equifax</strong> (central riesgo), arbol de decision, caso especial</td></tr>
+      </table>
+      <div class="section-divider" style="margin-top:16px">Mejoras v1 → v3</div>
+      <table style="font-size:11px">
+        <tr><td>OCR</td><td>v1: contaba existencia → <strong>v3: parsea JSON, extrae DNI, cruza vs solicitante</strong></td></tr>
+        <tr><td>Politica</td><td>v1: inferida → <strong>v3: extraida de arbol_decision (9 reglas reales)</strong></td></tr>
+        <tr><td>Keynua</td><td>v1: no analizado → <strong>v3: error + DNI mismatch biometrico</strong></td></tr>
+        <tr><td>Equifax</td><td>v1: solo fecha → <strong>v3: verifica request_id (llamada real)</strong></td></tr>
+        <tr><td>IPs</td><td>v1: intentado (eran del backend) → <strong>v3: eliminado</strong></td></tr>
+      </table>
+    </div>
+    <div>
+      <h3>Piloto: 150 solicitudes analizadas</h3>
+      <p style="margin-bottom:12px">Filtro: sueldo > S/ 500, fuente = boleta de pago (tipo_renta=1), ultimos 12 meses, solicitudes aprobadas/firmadas.</p>
+      <div class="grid-3" style="margin-bottom:16px">
+        <div class="card metric-card"><div class="value green">93</div><div class="label">Riesgo BAJO</div></div>
+        <div class="card metric-card"><div class="value yellow">56</div><div class="label">Riesgo MEDIO</div></div>
+        <div class="card metric-card"><div class="value red">1</div><div class="label">Riesgo ALTO</div></div>
+      </div>
+      <div class="grid-2" style="gap:12px;margin-bottom:12px">
+        <div class="card metric-card"><div class="value">116</div><div class="label">Con data FPD</div></div>
+        <div class="card metric-card"><div class="value">1.7%</div><div class="label">Tasa FPD 30+</div></div>
+      </div>
+      <div class="card" style="padding:14px">
+        <h4>Caso ejemplo: Solicitud #102848</h4>
+        <table style="font-size:12px">
+          <tr><td>Solicitante</td><td>Jhosimar Jair Flores Salas, 18 anos</td></tr>
+          <tr><td>Sueldo declarado</td><td class="red">S/ 0.00</td></tr>
+          <tr><td>Score admision</td><td class="red">Sin score (NULL)</td></tr>
+          <tr><td>Solicitudes previas</td><td class="red">2 rechazadas</td></tr>
+          <tr><td>DPD actual</td><td class="yellow">25 dias de atraso</td></tr>
+          <tr class="total-row"><td>Veredicto</td><td><span class="badge badge-red">NO APTO</span> — 6 banderas rojas</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 4: KYC SCREENER - RESULTADOS BATCH ==================== -->
+<div class="slide" id="s4">
+  <h2>KYC Screener — Resultados del Batch (150 casos)</h2>
+  <div class="grid-2">
+    <div>
+      <h3>Distribucion por Nivel de Riesgo</h3>
+      <div class="chart-container"><canvas id="chartRisk"></canvas></div>
+      <div class="section-divider" style="margin-top:16px">FPD (First Payment Default 30+)</div>
+      <div class="grid-3">
+        <div class="card metric-card"><div class="value">116</div><div class="label">Loans con data</div></div>
+        <div class="card metric-card"><div class="value red">2</div><div class="label">FPD 30+ detectados</div></div>
+        <div class="card metric-card"><div class="value">1.7%</div><div class="label">Tasa FPD</div></div>
+      </div>
+    </div>
+    <div>
+      <h3>Analisis por Dimension (7 cortes)</h3>
+      <table>
+        <tr><th>Dimension</th><th>Grupo</th><th class="num">Casos</th><th class="num">Riesgo Prom</th></tr>
+        <tr><td rowspan="2">Documentos</td><td>0 docs</td><td class="num red">Ver Excel</td><td class="num">Mayor</td></tr>
+        <tr><td>6+ docs</td><td class="num green">Ver Excel</td><td class="num">Menor</td></tr>
+        <tr><td rowspan="2">OCR DNI Check</td><td>MATCH</td><td class="num green">Ver Excel</td><td class="num">Menor</td></tr>
+        <tr><td>MISMATCH</td><td class="num red">Ver Excel</td><td class="num">Mayor</td></tr>
+        <tr><td rowspan="2">Verificacion</td><td>Verificado</td><td class="num green">Ver Excel</td><td class="num">Menor</td></tr>
+        <tr><td>No verificado</td><td class="num">Ver Excel</td><td class="num">Mayor</td></tr>
+        <tr><td rowspan="2">Equifax</td><td>Consultado (27%)</td><td class="num">41</td><td class="num">Menor</td></tr>
+        <tr><td>No consultado</td><td class="num">109</td><td class="num">Mayor</td></tr>
+        <tr><td rowspan="2">Keynua</td><td>OK</td><td class="num green">150</td><td class="num">—</td></tr>
+        <tr><td>Error/Mismatch</td><td class="num">0</td><td class="num">—</td></tr>
+        <tr><td rowspan="2">Arbol Decision</td><td>Aplicado</td><td class="num">Ver Excel</td><td class="num">Menor</td></tr>
+        <tr><td>No aplicado</td><td class="num">Ver Excel</td><td class="num">Mayor</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="card" style="margin-top:12px;padding:14px">
+    <p style="font-size:13px"><strong>Entregable:</strong> <code>KYC_BATCH_120_CASOS.xlsx</code> con 5 hojas: (1) Detalle 150 Casos (30 columnas), (2) Resumen por Riesgo con Tasa FPD, (3) Top 25 Banderas con correlacion a grupo ALTO/MEDIO, (4) Analisis por 7 Dimensiones de documentacion, (5) <strong>Politica de Admision Real</strong> (9 reglas del arbol de decision). Ademas: <code>KYC_SCORECARD_102848.md</code>.</p>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 5: STATEMENT AUDITOR - OVERVIEW ==================== -->
+<div class="slide" id="s5">
+  <h2><span class="badge badge-yellow" style="font-size:14px;margin-right:8px">4/10</span> Statement Auditor — Auditoria de EEFF</h2>
+  <div class="grid-2">
+    <div>
+      <h3>Que hace</h3>
+      <p>Audita los estados financieros de BaldeCash contra normas PCGE y NIIF/NIC. Genera dos reportes: memo ejecutivo (3 pags, gerencia) e informe detallado (contador, con ejemplos de asientos D/H y Excel).</p>
+      <div class="section-divider">Alcance cubierto</div>
+      <table style="font-size:12px">
+        <tr><td>1. Flujo contable</td><td>Cuadre D/H por mes (18 meses)</td></tr>
+        <tr><td>2. Cuentas relevantes</td><td>9 clases PCGE, cuenta por cuenta</td></tr>
+        <tr><td>3. Proveedores</td><td>Top 10 por monto, concentracion</td></tr>
+        <tr><td>4. Contingencias tributarias</td><td>IGV, IR no domiciliados, diferido</td></tr>
+        <tr><td>5. NIIF/NIC</td><td>NIIF 9, 15, 16 / NIC 2, 12, 16, 36</td></tr>
+        <tr><td>6. Consistencia</td><td>2025 vs 2026, cambios de politica</td></tr>
+        <tr><td>7. Ratios</td><td>Liquidez, solvencia, rentabilidad</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3>Hallazgos Principales</h3>
+      <table>
+        <tr><th>#</th><th>Hallazgo</th><th>Impacto (PEN)</th><th>Riesgo</th></tr>
+        <tr><td>1</td><td>Descuadre D/H dic 2025</td><td class="num">-526,240</td><td><span class="badge badge-red">CRITICO</span></td></tr>
+        <tr><td>2</td><td>Depreciacion no registrada 2026</td><td class="num">-5,985,447</td><td><span class="badge badge-red">CRITICO</span></td></tr>
+        <tr><td>3</td><td>COGS no registrado 2026</td><td class="num">-5,843,681</td><td><span class="badge badge-red">CRITICO</span></td></tr>
+        <tr><td>4</td><td>Cuenta 79 desbalanceada</td><td class="num">-7,375,703</td><td><span class="badge badge-red">ALTO</span></td></tr>
+        <tr><td>5</td><td>Clase 8 ausente 2026</td><td class="num dim">N/A</td><td><span class="badge badge-red">ALTO</span></td></tr>
+        <tr><td>6</td><td>Provision cta 19 triplicada</td><td class="num">870,848</td><td><span class="badge badge-red">ALTO</span></td></tr>
+        <tr><td>7</td><td>IGV sin compensar</td><td class="num">1,343,496</td><td><span class="badge badge-yellow">MEDIO</span></td></tr>
+        <tr><td>8</td><td>Gastos fin. / Revenue = 33.9%</td><td class="num dim">Ratio</td><td><span class="badge badge-yellow">MEDIO</span></td></tr>
+      </table>
+      <div class="card" style="margin-top:12px;padding:12px">
+        <p style="font-size:12px"><strong>Entregables:</strong> <code>AUDITORIA_EEFF_memo_ejecutivo.md</code> + <code>AUDITORIA_EEFF_informe_contador.md</code> + <code>auditoria_balances_2025_2026.xlsx</code> (4 hojas)</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 6: STATEMENT AUDITOR - P&L ==================== -->
+<div class="slide" id="s6">
+  <h2>Statement Auditor — P&L Comparativo y Balance</h2>
+  <div class="grid-2">
+    <div>
+      <h3>Estado de Resultados (PEN)</h3>
+      <table>
+        <tr><th>Concepto</th><th class="num">2025</th><th class="num">2026 H1</th></tr>
+        <tr class="bold-row"><td>Ingresos totales</td><td class="num">30,430,894</td><td class="num">8,929,205</td></tr>
+        <tr><td>Costo de ventas</td><td class="num">(5,964,384)</td><td class="num red">(120,703)</td></tr>
+        <tr class="bold-row"><td>Utilidad bruta</td><td class="num">24,466,510</td><td class="num">8,808,502</td></tr>
+        <tr><td>Gastos operativos</td><td class="num">(6,439,584)</td><td class="num">(4,231,606)</td></tr>
+        <tr class="bold-row"><td>EBITDA</td><td class="num">18,026,927</td><td class="num">4,576,896</td></tr>
+        <tr><td>Depreciacion</td><td class="num">(6,000,095)</td><td class="num red">(14,649)</td></tr>
+        <tr><td>Gastos financieros</td><td class="num">(3,862,198)</td><td class="num">(3,024,927)</td></tr>
+        <tr class="total-row"><td>EBT reportado</td><td class="num">8,164,633</td><td class="num">1,537,320</td></tr>
+        <tr><td><em>EBT ajustado (post-auditoria)</em></td><td class="num dim">—</td><td class="num red"><em>(4,369,569)</em></td></tr>
+      </table>
+    </div>
+    <div>
+      <h3>Cuadre D/H por Mes</h3>
+      <div class="chart-container"><canvas id="chartCuadre"></canvas></div>
+      <div class="card" style="margin-top:12px;padding:12px">
+        <p style="font-size:12px">Todos los meses cuadran excepto <strong class="red">diciembre 2025</strong> con diferencia de PEN -526,240.30. El descuadre se concentra en la transferencia cuenta 79 ↔ clase 9 durante el cierre anual.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 7: VALUATION REVIEWER ==================== -->
+<div class="slide" id="s7">
+  <h2><span class="badge badge-yellow" style="font-size:14px;margin-right:8px">4/10</span> Valuation Reviewer — Valorizacion BaldeCash</h2>
+  <div style="margin-bottom:20px">
+    <div class="ff-row">
+      <div class="ff-label">DCF (WACC 13.05%)</div>
+      <div class="ff-bar-wrap"><div class="ff-bar" style="left:23%;width:37%;background:linear-gradient(90deg,#3b82f6,#6366f1)">USD 3.8M — 9.5M</div></div>
+    </div>
+    <div class="ff-row">
+      <div class="ff-label">Trading Comps</div>
+      <div class="ff-bar-wrap"><div class="ff-bar" style="left:26%;width:46%;background:linear-gradient(90deg,#8b5cf6,#a78bfa)">USD 4.1M — 11.2M</div></div>
+    </div>
+    <div class="ff-row">
+      <div class="ff-label">Precedent Transactions</div>
+      <div class="ff-bar-wrap"><div class="ff-bar" style="left:36%;width:45%;background:linear-gradient(90deg,#06b6d4,#22d3ee)">USD 5.6M — 12.6M</div></div>
+    </div>
+    <div class="ff-row">
+      <div class="ff-label">NAV Ajustado</div>
+      <div class="ff-bar-wrap"><div class="ff-bar" style="left:12%;width:18%;background:linear-gradient(90deg,#f59e0b,#fbbf24)">USD 2.1M — 4.8M</div></div>
+    </div>
+    <div class="ff-row" style="margin-top:6px">
+      <div class="ff-label" style="font-weight:700;color:#fff">Consolidado</div>
+      <div class="ff-bar-wrap" style="border:1px solid rgba(59,130,246,0.3)"><div class="ff-bar" style="left:20%;width:42%;background:linear-gradient(90deg,#3b82f6,#8b5cf6);font-size:12px">USD 3.5M — 10.0M</div></div>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div>
+      <div class="grid-3">
+        <div class="card metric-card highlight"><div class="value">USD 6.2M</div><div class="label">Valor Central</div></div>
+        <div class="card metric-card"><div class="value">1.2x</div><div class="label">EV / Revenue</div></div>
+        <div class="card metric-card"><div class="value">0.42x</div><div class="label">EV / Portafolio</div></div>
+      </div>
+      <div class="card" style="margin-top:12px;padding:12px">
+        <h4>WACC Build-up</h4>
+        <p style="font-size:11px">RF 4.64% + ERP 4.23% + Peru CRP 1.73% + Size 4.00% + Specific 3.00% = <strong>Ke 17.60%</strong><br>Kd after-tax 10.01% | D/E 60/40 | <strong>WACC 13.05%</strong></p>
+      </div>
+    </div>
+    <div>
+      <h3>Peers Utilizados</h3>
+      <table style="font-size:12px">
+        <tr><th>Peer</th><th class="num">EV/Rev</th><th class="num">P/E</th><th class="num">P/B</th></tr>
+        <tr><td>Nubank (NU)</td><td class="num">3.3x</td><td class="num">19-24x</td><td class="num">5.0x</td></tr>
+        <tr><td>PagSeguro (PAGS)</td><td class="num">N/D</td><td class="num">6-7x</td><td class="num">1.0x</td></tr>
+        <tr><td>Banco Inter (INTR)</td><td class="num">N/D</td><td class="num">12-15x</td><td class="num">2.2x</td></tr>
+        <tr><td>StoneCo (STNE)</td><td class="num">N/D</td><td class="num">3.8x</td><td class="num">N/D</td></tr>
+      </table>
+      <p style="font-size:11px;margin-top:8px"><strong>Descuento total: 48%</strong> (iliquidez 25% + tamano 15% + jurisdiccion 10% + info quality 10%)</p>
+      <p style="font-size:11px;margin-top:4px"><strong>Entregables:</strong> <code>VALORIZACION_BALDECASH.md</code> + <code>VALORIZACION_BALDECASH_modelo.xlsx</code> (5 tabs)</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 8: PITCH AGENT (Desestimado) ==================== -->
+<div class="slide" id="s8">
+  <h2><span class="badge badge-gray" style="font-size:14px;margin-right:8px">Desestimado</span> Pitch Agent</h2>
+  <div class="grid-2">
+    <div>
+      <h3>Que hace</h3>
+      <p>Genera pitch decks y materiales para inversores extrayendo data directamente de la DB. Produce un pitch narrativo (.md) y un deck visual (.html) con graficos interactivos.</p>
+      <div class="section-divider">Output generado</div>
+      <table style="font-size:12px">
+        <tr><td>Pitch narrativo</td><td><code>PITCH_BALDECASH_2026.md</code></td></tr>
+        <tr><td>Deck visual</td><td><code>PITCH_BALDECASH_2026.html</code> (10 slides)</td></tr>
+        <tr><td>Contenido</td><td>Executive summary, mercado, traccion, NPL, financieros, fondeo, valorizacion, riesgos</td></tr>
+      </table>
+      <div class="section-divider">Por que se desestimo</div>
+      <p style="font-size:13px">El output es tecnicamente correcto pero un pitch para inversores requiere narrativa estrategica, contexto de mercado, y posicionamiento que solo el fundador puede definir. El agente es util como base de datos pero no como autor del pitch.</p>
+    </div>
+    <div>
+      <h3>Muestra del Output</h3>
+      <div class="card" style="padding:14px">
+        <h4>Metricas clave que extrae</h4>
+        <table style="font-size:12px">
+          <tr><td>Portafolio vigente</td><td class="num">USD 14,609,834</td></tr>
+          <tr><td>Loans vigentes</td><td class="num">11,774</td></tr>
+          <tr><td>Crecimiento anualizado</td><td class="num">78%</td></tr>
+          <tr><td>NPL 31+</td><td class="num">8.30%</td></tr>
+          <tr><td>Revenue H1 2026</td><td class="num">PEN 8,929,205</td></tr>
+          <tr><td>Fondeo total</td><td class="num">USD 17,728,306</td></tr>
+          <tr><td>Costo fondeo</td><td class="num">14.2%</td></tr>
+          <tr><td>Valorizacion</td><td class="num">USD 3.5M — 10M</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 9: FINANCIAL ANALYSIS (Desestimado) ==================== -->
+<div class="slide" id="s9">
+  <h2><span class="badge badge-gray" style="font-size:14px;margin-right:8px">Desestimado</span> Financial Analysis (Core)</h2>
+  <div class="grid-2">
+    <div>
+      <h3>Que hace</h3>
+      <p>Toolkit de 13 skills individuales para analisis financiero. Cada skill se invoca con un slash command.</p>
+      <div class="section-divider">Skills disponibles</div>
+      <table style="font-size:12px">
+        <tr><td><code>/3-statement-model</code></td><td>Income Statement, Balance Sheet, Cash Flow</td></tr>
+        <tr><td><code>/dcf</code></td><td>Discounted Cash Flow valuation</td></tr>
+        <tr><td><code>/comps</code></td><td>Comparable company analysis</td></tr>
+        <tr><td><code>/lbo</code></td><td>Leveraged buyout model</td></tr>
+        <tr><td><code>/debug-model</code></td><td>Auditar formulas en Excel</td></tr>
+        <tr><td><code>/audit-xls</code></td><td>Verificar integridad de spreadsheets</td></tr>
+        <tr><td><code>/competitive-analysis</code></td><td>Analisis competitivo</td></tr>
+        <tr><td><code>/xlsx-author</code></td><td>Generar Excel headless</td></tr>
+        <tr><td><code>/pptx-author</code></td><td>Generar PowerPoint headless</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3>Output del piloto: 3-Statement Model</h3>
+      <div class="card" style="padding:14px;margin-bottom:12px">
+        <table style="font-size:12px">
+          <tr><th>Check</th><th>Resultado</th></tr>
+          <tr><td>BS Balance A=P+E</td><td><span class="badge badge-red">NO</span></td></tr>
+          <tr><td>Cash tie-out</td><td><span class="badge badge-green">SI</span></td></tr>
+          <tr><td>D=H mensual 2026</td><td><span class="badge badge-green">SI</span></td></tr>
+          <tr><td>D=H mensual 2025</td><td><span class="badge badge-yellow">PARCIAL</span></td></tr>
+          <tr><td>Upload deduplicado</td><td><span class="badge badge-green">SI</span></td></tr>
+        </table>
+      </div>
+      <div class="section-divider">Por que se desestimo</div>
+      <p style="font-size:13px">Skills genericos ya cubiertos por el Valuation Reviewer y Statement Auditor. El /dcf y /comps son redundantes. El 3-statement model tiene valor incremental pero la data contable de BaldeCash tiene gaps que hacen que el BS no cuadre — el modelo requiere correccion manual.</p>
+      <p style="font-size:12px;margin-top:8px"><strong>Entregable:</strong> <code>BALDECASH_3_Statement_Model.xlsx</code> (4 tabs)</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 10: CONCLUSIONES ==================== -->
+<div class="slide" id="s10">
+  <h2>Conclusiones y Proximos Pasos</h2>
+  <div class="grid-2">
+    <div>
+      <h3>Recomendacion</h3>
+      <div class="card" style="padding:16px;margin-bottom:16px;border-color:rgba(34,197,94,0.3)">
+        <h4 class="green">Implementar: KYC Screener (6/10)</h4>
+        <p style="font-size:13px">Mayor valor inmediato. Cruza 2 DBs, usa politica real, analiza OCR, Keynua, Equifax. FPD 1.7%. Para llegar a 8/10 requiere:</p>
+        <ul style="font-size:12px;color:#b0b0b0;margin-top:8px;padding-left:16px">
+          <li>Analisis profundo del contenido OCR (monto transferencia vs cuota, fechas, beneficiario)</li>
+          <li>Correlacion estadistica flags → FPD con muestra mas grande (1,000+ casos)</li>
+          <li>Calibrar thresholds del scoring contra defaults reales (logistic regression)</li>
+          <li>Capturar IP real del cliente (actualmente solo se registra IP del backend)</li>
+          <li>Integrar con flujo de aprobacion pre-desembolso (no solo auditoria post)</li>
+        </ul>
+      </div>
+      <div class="card" style="padding:16px;border-color:rgba(234,179,8,0.3)">
+        <h4 class="yellow">Evaluar: Statement Auditor + Valuation (4/10)</h4>
+        <p style="font-size:13px">Utiles como herramientas internas, pero limitados por la calidad de la data contable. Recomendable re-correr despues de la remediacion contable (90 dias).</p>
+      </div>
+    </div>
+    <div>
+      <h3>Archivos Generados</h3>
+      <table style="font-size:12px">
+        <tr><th>Agente</th><th>Archivos</th></tr>
+        <tr><td rowspan="3">Statement Auditor</td><td><code>AUDITORIA_EEFF_memo_ejecutivo.md</code></td></tr>
+        <tr><td><code>AUDITORIA_EEFF_informe_contador.md</code></td></tr>
+        <tr><td><code>auditoria_balances_2025_2026.xlsx</code></td></tr>
+        <tr><td rowspan="3">Valuation Reviewer</td><td><code>VALORIZACION_BALDECASH.md</code></td></tr>
+        <tr><td><code>valuation_comps_research.md</code></td></tr>
+        <tr><td><code>VALORIZACION_BALDECASH_modelo.xlsx</code></td></tr>
+        <tr><td rowspan="2">KYC Screener</td><td><code>KYC_SCORECARD_102848.md</code></td></tr>
+        <tr><td><code>KYC_BATCH_120_CASOS.xlsx</code></td></tr>
+        <tr><td rowspan="2">Pitch Agent</td><td><code>PITCH_BALDECASH_2026.md</code></td></tr>
+        <tr><td><code>PITCH_BALDECASH_2026.html</code></td></tr>
+        <tr><td>Financial Analysis</td><td><code>BALDECASH_3_Statement_Model.xlsx</code></td></tr>
+      </table>
+      <p style="font-size:11px;margin-top:12px;color:#6b7280">Total: 11 archivos | Directorio: Agente de Finanzas/</p>
+    </div>
+  </div>
+  <div style="text-align:center;padding:16px 0;color:#4b5563;font-size:11px;margin-top:auto">
+    BaldeCash — Piloto Agentes Financieros — Julio 2026 — Confidencial
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <button onclick="prev()">&larr;</button>
+  <span class="counter" id="counter">1 / 10</span>
+  <button onclick="next()">&rarr;</button>
+</div>
+
+<script>
+const slides=document.querySelectorAll('.slide');let current=0;const total=slides.length;
+function show(n){slides[current].classList.remove('active');current=(n+total)%total;slides[current].classList.add('active');document.getElementById('counter').textContent=(current+1)+' / '+total;document.getElementById('progress').style.width=((current+1)/total*100)+'%'}
+function next(){show(current+1)}function prev(){show(current-1)}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();next()}if(e.key==='ArrowLeft'){e.preventDefault();prev()}});
+
+// Risk distribution chart
+new Chart(document.getElementById('chartRisk'),{
+  type:'doughnut',
+  data:{labels:['Riesgo BAJO (93)','Riesgo MEDIO (56)','Riesgo ALTO (1)'],
+    datasets:[{data:[93,56,1],backgroundColor:['#22c55e','#eab308','#ef4444'],borderWidth:0}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'60%',
+    plugins:{legend:{position:'bottom',labels:{color:'#9ca3af',padding:16,font:{size:12}}}}}
+});
+
+// Cuadre D/H chart
+new Chart(document.getElementById('chartCuadre'),{
+  type:'bar',
+  data:{labels:['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic','Ene','Feb','Mar','Abr','May','Jun'],
+    datasets:[{label:'Diferencia D-H (PEN)',
+      data:[0,0,0,0,-0.22,0,0,0,-0.54,0,0,-526240,0,0,-0.12,0,0,0],
+      backgroundColor:function(ctx){return ctx.raw<-100?'#ef4444':'#22c55e'},
+      borderRadius:3}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{y:{grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'#6b7280',callback:v=>v<-100?(v/1000).toFixed(0)+'K':'0'}},
+      x:{grid:{display:false},ticks:{color:'#6b7280',font:{size:10}}}}}
+});
+</script>
+</body>
+</html>
