@@ -90,6 +90,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
       <div class="agent-name">KYC Screener</div>
       <div class="agent-desc">Evalua solicitudes de credito contra politica de admision real. Cruza 2 DBs, analiza OCR, Equifax, Keynua, verificaciones.</div>
       <div class="agent-score green">7/10</div>
+
       <div class="agent-verdict green">Potencial implementacion</div>
     </div>
 
@@ -126,7 +127,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
     <table>
       <tr><th style="width:20%">Agente</th><th style="width:15%">Veredicto</th><th style="width:10%">Score</th><th>Resultado del piloto</th></tr>
       <tr><td><strong>KYC Screener</strong></td><td><span class="badge badge-green">Implementar</span></td><td class="num green">7/10</td>
-        <td>Evaluacion de 200 solicitudes cruzando 2 DBs. Scoring 6 dimensiones con OCR profundo (cruce DNI en docs, nombres en boletas, ESSALUD, AFP). Detecto caso de fraude documental: solicitud con boleta, ESSALUD y recibo de luz de 3 personas distintas, aprobada sin score. FPD por grupo: BAJO 3.4%, MEDIO 0.0%, ALTO 0.0%. El scoring requiere recalibracion contra defaults.</td></tr>
+        <td>Analisis profundo de 341 solicitudes (solo cupon, con OCR) cruzando 2 DBs + 2,128 docs OCR. 14 reglas cross-solicitud: variacion de sueldo, empleadores distintos, nombres/DNIs mismatch en boletas, RCI en doc >40%, score Equifax en OCR. Detecto fraude documental (3 personas en 1 solicitud). FPD: BAJO 2.4%, MEDIO 0.0%, ALTO 1.3%.</td></tr>
       <tr><td><strong>Statement Auditor</strong></td><td><span class="badge badge-yellow">Evaluar</span></td><td class="num yellow">4/10</td>
         <td>Auditoria exhaustiva de EEFF 2025-2026. Detecto 8 hallazgos (3 criticos: depreciacion no registrada, COGS omitido, descuadre dic-2025). Genera 2 versiones (ejecutivo + contador) y Excel. Limitado por calidad de data contable.</td></tr>
       <tr><td><strong>Valuation Reviewer</strong></td><td><span class="badge badge-yellow">Evaluar</span></td><td class="num yellow">4/10</td>
@@ -141,50 +142,47 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 
 <!-- ==================== SLIDE 3: KYC SCREENER - OVERVIEW ==================== -->
 <div class="slide" id="s3">
-  <h2><span class="badge badge-green" style="font-size:14px;margin-right:8px">7/10</span> KYC Screener — Evaluacion de Solicitudes</h2>
+  <h2><span class="badge badge-green" style="font-size:14px;margin-right:8px">7/10</span> KYC Screener — Analisis Profundo con OCR</h2>
   <div class="grid-2">
     <div>
-      <h3>Que hace (v3)</h3>
-      <p>Cruza 2 bases de datos (Aurora PostgreSQL + MySQL CashSys), analiza documentos via OCR, valida identidad con Keynua, consulta Equifax, y evalua contra la <strong>politica real</strong> extraida de la tabla arbol_decision.</p>
-      <div class="section-divider">6 dimensiones de analisis</div>
-      <table>
-        <tr><td><span class="badge badge-blue">D1</span> Perfil demografico</td><td>Edad, sueldo, ocupacion</td></tr>
-        <tr><td><span class="badge badge-blue">D2</span> Capacidad de pago</td><td>RCI vs politica real (arbol decision), pension/sueldo</td></tr>
-        <tr><td><span class="badge badge-blue">D3</span> Historial interno</td><td>Solicitudes lifetime, ratio rechazo</td></tr>
-        <tr><td><span class="badge badge-blue">D4</span> Documentacion + OCR</td><td>Docs subidos, OCR parseado, <strong>cruce DNI doc vs DNI solicitante</strong></td></tr>
-        <tr><td><span class="badge badge-blue">D5</span> Validacion identidad</td><td><strong>Keynua</strong> (biometrico), verificacion laboral</td></tr>
-        <tr><td><span class="badge badge-blue">D6</span> Controles externos</td><td><strong>Equifax</strong> (central riesgo), arbol de decision, caso especial</td></tr>
-      </table>
-      <div class="section-divider" style="margin-top:16px">Mejoras v1 → v3</div>
+      <h3>Que hace (v6 — version final)</h3>
+      <p>Cruza 2 DBs, analiza <strong>2,128 documentos OCR</strong> de 341 personas. Detecta patrones anomalos <strong>entre solicitudes</strong> del mismo cliente: variacion de sueldo, cambio de empleador, documentos a nombre de terceros.</p>
+      <div class="section-divider">14 reglas de deteccion (cross-solicitud + individual)</div>
       <table style="font-size:11px">
-        <tr><td>OCR</td><td>v1: contaba existencia → <strong>v3: parsea JSON, extrae DNI, cruza vs solicitante</strong></td></tr>
-        <tr><td>Politica</td><td>v1: inferida → <strong>v3: extraida de arbol_decision (9 reglas reales)</strong></td></tr>
-        <tr><td>Keynua</td><td>v1: no analizado → <strong>v3: error + DNI mismatch biometrico</strong></td></tr>
-        <tr><td>Equifax</td><td>v1: solo fecha → <strong>v3: verifica request_id (llamada real)</strong></td></tr>
-        <tr><td>IPs</td><td>v1: intentado (eran del backend) → <strong>v3: eliminado</strong></td></tr>
+        <tr><th colspan="2">Cross-solicitud (OCR profundo)</th></tr>
+        <tr><td>R1</td><td>Sueldo varia >30%/50%/100% entre solicitudes</td></tr>
+        <tr><td>R2</td><td>Empleadores distintos en boletas OCR</td></tr>
+        <tr><td>R3</td><td>Nombres en docs no coinciden con solicitante</td></tr>
+        <tr><td>R4</td><td>DNI en documento OCR != DNI solicitante</td></tr>
+        <tr><td>R5</td><td>Monto boletas OCR vs sueldo declarado</td></tr>
+        <tr><td>R6</td><td>RCI en documento OCR >40%</td></tr>
+        <tr><td>R7</td><td>Score Equifax extraido del OCR</td></tr>
+        <tr><td>R8</td><td>Multiples RUCs de empleador</td></tr>
+        <tr><th colspan="2">Solicitud individual</th></tr>
+        <tr><td>R9-R14</td><td>Ratio rechazo, edad, score, sueldo, Equifax, Keynua, arbol decision</td></tr>
       </table>
+      <div class="section-divider" style="margin-top:12px">Filtro de muestra</div>
+      <p style="font-size:11px">Boleta de pago, firmadas ultimos 6 meses, <strong>solo cupon de activador</strong>, con al menos 1 documento OCR procesado. 341 personas, 546 solicitudes, 2,128 docs OCR.</p>
     </div>
     <div>
-      <h3>Piloto: 150 solicitudes analizadas</h3>
-      <p style="margin-bottom:12px">Filtro: sueldo > S/ 500, fuente = boleta de pago (tipo_renta=1), ultimos 12 meses, solicitudes aprobadas/firmadas.</p>
+      <h3>Resultados: 341 casos analizados</h3>
       <div class="grid-3" style="margin-bottom:16px">
-        <div class="card metric-card"><div class="value green">93</div><div class="label">Riesgo BAJO</div></div>
-        <div class="card metric-card"><div class="value yellow">56</div><div class="label">Riesgo MEDIO</div></div>
-        <div class="card metric-card"><div class="value red">1</div><div class="label">Riesgo ALTO</div></div>
+        <div class="card metric-card"><div class="value green">165</div><div class="label">Riesgo BAJO (48%)</div></div>
+        <div class="card metric-card"><div class="value yellow">75</div><div class="label">Riesgo MEDIO (22%)</div></div>
+        <div class="card metric-card"><div class="value red">101</div><div class="label">Riesgo ALTO (30%)</div></div>
       </div>
-      <div class="grid-2" style="gap:12px;margin-bottom:12px">
-        <div class="card metric-card"><div class="value">116</div><div class="label">Con data FPD</div></div>
-        <div class="card metric-card"><div class="value">1.7%</div><div class="label">Tasa FPD 30+</div></div>
+      <div class="grid-3" style="gap:12px;margin-bottom:12px">
+        <div class="card metric-card"><div class="value">259</div><div class="label">Medibles FPD</div></div>
+        <div class="card metric-card"><div class="value">4</div><div class="label">Impago 1ra cuota</div></div>
+        <div class="card metric-card"><div class="value">1.5%</div><div class="label">Tasa FPD total</div></div>
       </div>
       <div class="card" style="padding:14px">
-        <h4>Caso ejemplo: Solicitud #102848</h4>
+        <h4>FPD por nivel de riesgo</h4>
         <table style="font-size:12px">
-          <tr><td>Solicitante</td><td>J. F. S. (anonimizado), 18 anos</td></tr>
-          <tr><td>Sueldo declarado</td><td class="red">S/ 0.00</td></tr>
-          <tr><td>Score admision</td><td class="red">Sin score (NULL)</td></tr>
-          <tr><td>Solicitudes previas</td><td class="red">2 rechazadas</td></tr>
-          <tr><td>DPD actual</td><td class="yellow">25 dias de atraso</td></tr>
-          <tr class="total-row"><td>Veredicto</td><td><span class="badge badge-red">NO APTO</span> — 6 banderas rojas</td></tr>
+          <tr><th>Nivel</th><th class="num">Medibles</th><th class="num">Impago</th><th class="num">Tasa FPD</th></tr>
+          <tr><td><span class="badge badge-green">BAJO</span></td><td class="num">123</td><td class="num">3</td><td class="num">2.4%</td></tr>
+          <tr><td><span class="badge badge-yellow">MEDIO</span></td><td class="num">58</td><td class="num">0</td><td class="num green">0.0%</td></tr>
+          <tr><td><span class="badge badge-red">ALTO</span></td><td class="num">78</td><td class="num">1</td><td class="num">1.3%</td></tr>
         </table>
       </div>
     </div>
@@ -297,33 +295,34 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 
 <!-- ==================== SLIDE 6: KYC SCREENER - RESULTADOS BATCH ==================== -->
 <div class="slide" id="s6">
-  <h2>KYC Screener — Resultados del Batch (200 casos)</h2>
+  <h2>KYC Screener — Top 10 Casos Riesgo ALTO</h2>
   <div class="grid-2">
     <div>
-      <h3>Distribucion por Nivel de Riesgo</h3>
+      <h3>Distribucion por Riesgo (341 casos)</h3>
       <div class="chart-container"><canvas id="chartRisk"></canvas></div>
-      <div class="section-divider" style="margin-top:16px">FPD 30+ por Nivel de Riesgo</div>
-      <table>
-        <tr><th>Nivel</th><th class="num">Casos</th><th class="num">Medibles *</th><th class="num">Impago 1ra cuota **</th><th class="num">Pago OK</th><th class="num">Tasa FPD</th></tr>
-        <tr><td><span class="badge badge-green">BAJO</span></td><td class="num">131</td><td class="num">119</td><td class="num red">4</td><td class="num">115</td><td class="num red">3.4%</td></tr>
-        <tr><td><span class="badge badge-yellow">MEDIO</span></td><td class="num">64</td><td class="num">57</td><td class="num">0</td><td class="num">57</td><td class="num green">0.0%</td></tr>
-        <tr><td><span class="badge badge-red">ALTO</span></td><td class="num">5</td><td class="num">4</td><td class="num">0</td><td class="num">4</td><td class="num green">0.0%</td></tr>
-        <tr class="total-row"><td>Total</td><td class="num">200</td><td class="num">180</td><td class="num">4</td><td class="num">176</td><td class="num">2.2%</td></tr>
-      </table>
-      <p style="font-size:10px;color:#6b7280;margin-top:8px">* Medibles: solicitudes con al menos 2 meses de vida en cartera (las demas son muy recientes para medir FPD)<br>** FPD 30+ (First Payment Default): cliente que no pago su primera cuota y acumulo mas de 30 dias de atraso</p>
+      <p style="font-size:10px;color:#6b7280;margin-top:8px">* Medibles: solicitudes con al menos 2 meses de vida en cartera<br>** FPD 30+: cliente que no pago su primera cuota y acumulo >30 dias de atraso</p>
     </div>
     <div>
-      <h3>Hallazgo: Scoring no correlaciona con FPD</h3>
-      <div class="card" style="padding:14px;margin-bottom:14px;border-color:rgba(234,179,8,0.3)">
-        <h4 class="yellow" style="font-size:13px">El grupo BAJO tiene la mayor tasa de default</h4>
-        <p style="font-size:12px">Los 4 casos de FPD 30+ estan en el grupo de riesgo BAJO (3.4%), mientras MEDIO y ALTO tienen 0%. Esto indica que las dimensiones del scoring actual (score de admision, Equifax, docs) <strong>no predicen defaults en esta muestra</strong>. El modelo necesita recalibrarse con regresion logistica sobre variables que si correlacionan con mora.</p>
+      <h3>Casos mas criticos detectados</h3>
+      <table style="font-size:11px">
+        <tr><th>#</th><th>Pts</th><th>Anomalias clave</th></tr>
+        <tr><td>1</td><td class="red">14</td><td>Sueldo varia 1,151-9,500 (8.3x); 2 empleadores distintos; doc a nombre de otro</td></tr>
+        <tr><td>2</td><td class="red">12</td><td>Doc a nombre de otro; DNI en doc != solicitante; Equifax OCR score bajo</td></tr>
+        <tr><td>3</td><td class="red">11</td><td>Sueldo varia 600-1,235 (2.1x); RCI en doc 42% (>40%); Score 211; Keynua error</td></tr>
+        <tr><td>4</td><td class="red">10</td><td>Doc a nombre de otro; DNI en doc = 00000000; sin score; sin arbol</td></tr>
+        <tr><td>5</td><td class="red">10</td><td>Sueldo varia 1-1,200 (1,263x); Boleta S/59 vs sueldo S/575; Equifax OCR 228</td></tr>
+        <tr><td>6</td><td class="red">10</td><td>Sueldo varia 1,140-1,520; DNI en doc != solicitante; Equifax OCR score bajo</td></tr>
+        <tr><td>7</td><td class="num">9</td><td>DNI en doc != solicitante; Boletas S/4,026 vs sueldo declarado distinto</td></tr>
+        <tr><td>8</td><td class="num">8</td><td>Doc a nombre de otro; RCI en doc 56% (>40%); Equifax OCR 362</td></tr>
+        <tr><td>9</td><td class="num">8</td><td>DNI en doc = 00000000; RCI en doc 47% (>40%); sin score</td></tr>
+        <tr><td>10</td><td class="num">8</td><td>2 empleadores distintos; RCI en doc 43%; 2 RUCs distintos</td></tr>
+      </table>
+      <div class="card" style="margin-top:12px;padding:12px;border-color:rgba(34,197,94,0.3)">
+        <h4 style="font-size:12px" class="green">Valor del analisis profundo</h4>
+        <p style="font-size:11px">Las 14 reglas cross-solicitud detectaron patrones que el scoring simple no captura: sueldos que varian 8x entre solicitudes, boletas a nombre de terceros, DNIs de documentos que no coinciden con el solicitante, y RCIs en documentos que exceden el 40% permitido.</p>
       </div>
-      <h3>Valor diferencial: Deteccion de fraude OCR</h3>
-      <div class="card" style="padding:14px;border-color:rgba(34,197,94,0.3)">
-        <p style="font-size:12px">Donde el agente SI demostro valor es en el <strong>cruce automatico de OCR</strong>: detecto una solicitud aprobada con boleta de pago, ESSALUD y recibo de luz de 3 personas distintas (caso #118669). Este tipo de inconsistencia documental no requiere calibracion estadistica — es una regla deterministica que puede implementarse inmediatamente como filtro pre-aprobacion.</p>
-      </div>
-      <div class="section-divider" style="margin-top:14px">Entregables</div>
-      <p style="font-size:12px"><code>KYC_BATCH_120_CASOS.xlsx</code> (5 hojas) + <code>KYC_SCORECARD_102848.md</code> (caso NO APTO) + <code>KYC_SCORECARD_97830_OCR.md</code> (caso APTO con OCR) + <code>KYC_SCORECARD_118669_OCR_FRAUDE.md</code> (fraude documental)</p>
+      <div class="section-divider" style="margin-top:10px">Entregables</div>
+      <p style="font-size:11px"><code>KYC_BATCH_120_CASOS.xlsx</code> (4 hojas: Detalle 341 casos con 23 columnas, Resumen por Riesgo con FPD, Anomalias Frecuentes, Casos Riesgo ALTO) + 3 scorecards individuales (.md)</p>
     </div>
   </div>
 </div>
@@ -529,13 +528,13 @@ tr:hover td{background:rgba(255,255,255,0.02)}
       <h3>Recomendacion</h3>
       <div class="card" style="padding:16px;margin-bottom:16px;border-color:rgba(34,197,94,0.3)">
         <h4 class="green">Implementar: KYC Screener (7/10)</h4>
-        <p style="font-size:13px">Mayor valor demostrado en deteccion de fraude documental via cruce OCR. El scoring de riesgo requiere recalibracion (grupo BAJO tiene mayor FPD que ALTO). Para llegar a 9/10:</p>
+        <p style="font-size:13px">Analisis profundo de 341 solicitudes con 14 reglas cross-solicitud sobre 2,128 docs OCR. Detecto fraude documental, variaciones de sueldo de hasta 8.3x, y docs con DNIs de terceros. Para llegar a 9/10:</p>
         <ul style="font-size:12px;color:#b0b0b0;margin-top:8px;padding-left:16px">
-          <li>Implementar cruce OCR como regla deterministica pre-aprobacion (valor inmediato)</li>
-          <li>Recalibrar scoring con regresion logistica sobre 1,000+ casos con FPD real</li>
-          <li>Analizar montos de boletas OCR vs sueldo declarado (inconsistencia de ingresos)</li>
+          <li>Implementar las 14 reglas como filtro pre-aprobacion (valor inmediato)</li>
+          <li>Ampliar muestra a 1,000+ casos para calibrar thresholds con regresion logistica</li>
           <li>Cruzar RUC de empleador en boleta vs SUNAT (empresa activa/habida)</li>
-          <li>Integrar en flujo pre-desembolso, no solo auditoria post</li>
+          <li>Incluir analisis de solicitudes sin cupon (609 personas adicionales)</li>
+          <li>Integrar en flujo pre-desembolso automatizado</li>
         </ul>
       </div>
       <div class="card" style="padding:16px;border-color:rgba(234,179,8,0.3)">
@@ -583,8 +582,8 @@ document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.
 // Risk distribution chart
 new Chart(document.getElementById('chartRisk'),{
   type:'doughnut',
-  data:{labels:['BAJO: 131 (FPD 3.4%)','MEDIO: 64 (FPD 0.0%)','ALTO: 5 (FPD 0.0%)'],
-    datasets:[{data:[131,64,5],backgroundColor:['#22c55e','#eab308','#ef4444'],borderWidth:0}]},
+  data:{labels:['BAJO: 165 (FPD 2.4%)','MEDIO: 75 (FPD 0.0%)','ALTO: 101 (FPD 1.3%)'],
+    datasets:[{data:[165,75,101],backgroundColor:['#22c55e','#eab308','#ef4444'],borderWidth:0}]},
   options:{responsive:true,maintainAspectRatio:false,cutout:'60%',
     plugins:{legend:{position:'bottom',labels:{color:'#9ca3af',padding:14,font:{size:11}}}}}
 });
