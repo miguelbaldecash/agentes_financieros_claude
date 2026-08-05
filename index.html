@@ -146,30 +146,32 @@ tr:hover td{background:rgba(255,255,255,0.02)}
     <div>
       <h3>Que hace (v6 — version final)</h3>
       <p>Cruza 2 DBs, analiza <strong>2,128 documentos OCR</strong> de 341 personas. Detecta patrones anomalos <strong>entre solicitudes</strong> del mismo cliente: variacion de sueldo, cambio de empleador, documentos a nombre de terceros.</p>
-      <div class="section-divider">17 reglas de deteccion</div>
-      <table style="font-size:10px">
-        <tr><th colspan="3">Cross-solicitud (OCR profundo) — R1-R8</th></tr>
-        <tr><td>R1</td><td>Sueldo varia >30%/50%/100%</td><td class="num dim">1/2/3 pts</td></tr>
-        <tr><td>R2</td><td>Empleadores distintos en boletas (2/3+)</td><td class="num dim">2/3 pts</td></tr>
-        <tr><td>R3</td><td>Nombres en docs != solicitante (1/2+)</td><td class="num dim">2/4 pts</td></tr>
-        <tr><td>R4</td><td>DNI en doc OCR != DNI solicitante</td><td class="num dim">3 pts</td></tr>
-        <tr><td>R5</td><td>Boletas OCR vs sueldo declarado (>50%)</td><td class="num dim">2 pts</td></tr>
-        <tr><td>R6</td><td>RCI en documento OCR >40%</td><td class="num dim">2 pts</td></tr>
-        <tr><td>R7</td><td>Equifax score OCR <400/<500</td><td class="num dim">2/1 pts</td></tr>
-        <tr><td>R8</td><td>Multiples RUCs empleador (2/3+)</td><td class="num dim">1/2 pts</td></tr>
-        <tr><th colspan="3">Individual — R9-R14</th></tr>
-        <tr><td>R9</td><td>Ratio rechazo >70% / exceso sols 8+</td><td class="num dim">2/1 pts</td></tr>
-        <tr><td>R10</td><td>Edad <19 / <20</td><td class="num dim">2/1 pts</td></tr>
-        <tr><td>R11</td><td>Score <250/<350 / sin score</td><td class="num dim">2/1/1 pts</td></tr>
-        <tr><td>R12</td><td>Sueldo =0 / <800</td><td class="num dim">2/1 pts</td></tr>
-        <tr><td>R13</td><td>Sin Equifax / Keynua err / DNI mis / sin arbol</td><td class="num dim">1/2/3/1 pts</td></tr>
-        <tr><td>R14</td><td>Edad varia >3 anos entre solicitudes</td><td class="num dim">1 pts</td></tr>
-        <tr><th colspan="3">Anti-fraude — R15-R17 (0 disparos en esta muestra *)</th></tr>
-        <tr><td>R15</td><td>Distinto apoderado entre solicitudes (2/3+)</td><td class="num dim">2/4 pts</td></tr>
-        <tr><td>R16</td><td>Apoderado compartido con otros solicitantes</td><td class="num dim">1/3 pts</td></tr>
-        <tr><td>R17</td><td>Correo compartido con otro DNI</td><td class="num dim">2 pts</td></tr>
-      </table>
-      <p style="font-size:9px;color:#6b7280;margin-top:4px">* R15-R17 existen en la base general pero no en este segmento (solo cupon + OCR). Clasificacion: BAJO pts&lt;=2, MEDIO 3-4, ALTO &gt;4.</p>
+      <details style="margin-top:12px">
+        <summary style="cursor:pointer;font-size:11px;text-transform:uppercase;letter-spacing:3px;color:#4b5563;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,0.06)">17 reglas de deteccion (click para ver)</summary>
+        <table style="font-size:10px;margin-top:8px">
+          <tr><th colspan="3">Cross-solicitud (OCR profundo) — R1-R8</th></tr>
+          <tr><td>R1</td><td>Sueldo varia >30%/50%/100%</td><td class="num dim">1/2/3 pts</td></tr>
+          <tr><td>R2</td><td>Empleadores distintos en boletas (2/3+)</td><td class="num dim">2/3 pts</td></tr>
+          <tr><td>R3</td><td>Nombres en docs != solicitante (1/2+)</td><td class="num dim">2/4 pts</td></tr>
+          <tr><td>R4</td><td>DNI en doc OCR != DNI solicitante</td><td class="num dim">3 pts</td></tr>
+          <tr><td>R5</td><td>Boletas OCR vs sueldo declarado (>50%)</td><td class="num dim">2 pts</td></tr>
+          <tr><td>R6</td><td>RCI en documento OCR >40%</td><td class="num dim">2 pts</td></tr>
+          <tr><td>R7</td><td>Equifax score OCR <400/<500</td><td class="num dim">2/1 pts</td></tr>
+          <tr><td>R8</td><td>Multiples RUCs empleador (2/3+)</td><td class="num dim">1/2 pts</td></tr>
+          <tr><th colspan="3">Individual — R9-R14</th></tr>
+          <tr><td>R9</td><td>Ratio rechazo >70% / exceso sols 8+</td><td class="num dim">2/1 pts</td></tr>
+          <tr><td>R10</td><td>Edad <19 / <20</td><td class="num dim">2/1 pts</td></tr>
+          <tr><td>R11</td><td>Score <250/<350 / sin score</td><td class="num dim">2/1/1 pts</td></tr>
+          <tr><td>R12</td><td>Sueldo =0 / <800</td><td class="num dim">2/1 pts</td></tr>
+          <tr><td>R13</td><td>Sin Equifax / Keynua err / DNI mis / sin arbol</td><td class="num dim">1/2/3/1 pts</td></tr>
+          <tr><td>R14</td><td>Edad varia >3 anos entre solicitudes</td><td class="num dim">1 pts</td></tr>
+          <tr><th colspan="3">Anti-fraude — R15-R17 (0 disparos en esta muestra *)</th></tr>
+          <tr><td>R15</td><td>Distinto apoderado entre solicitudes (2/3+)</td><td class="num dim">2/4 pts</td></tr>
+          <tr><td>R16</td><td>Apoderado compartido con otros solicitantes</td><td class="num dim">1/3 pts</td></tr>
+          <tr><td>R17</td><td>Correo compartido con otro DNI</td><td class="num dim">2 pts</td></tr>
+        </table>
+        <p style="font-size:9px;color:#6b7280;margin-top:4px">* R15-R17 existen en la base general pero no en este segmento (solo cupon + OCR). Clasificacion: BAJO pts&lt;=2, MEDIO 3-4, ALTO &gt;4.</p>
+      </details>
       <div class="section-divider" style="margin-top:12px">Filtro y composicion de muestra</div>
       <p style="font-size:11px">Boleta de pago, firmadas ultimos 6 meses, <strong>solo cupon de activador</strong>, con al menos 1 doc OCR. Total: 341 personas, 546 solicitudes, 2,128 docs OCR.</p>
       <table style="font-size:10px;margin-top:6px">
