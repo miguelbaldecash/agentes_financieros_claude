@@ -145,7 +145,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
   <div class="grid-2">
     <div>
       <h3>Que hace (v6 — version final)</h3>
-      <p>Cruza 2 DBs, analiza <strong>2,128 documentos OCR</strong> de 341 personas. Detecta patrones anomalos <strong>entre solicitudes</strong> del mismo cliente: variacion de sueldo, cambio de empleador, documentos a nombre de terceros.</p>
+      <p>Cruza 2 DBs, analiza <strong>1,256 documentos OCR</strong> de 187 personas. Detecta patrones anomalos <strong>entre solicitudes</strong> del mismo cliente: variacion de sueldo, cambio de empleador, documentos a nombre de terceros.</p>
       <details style="margin-top:12px">
         <summary style="cursor:pointer;font-size:11px;text-transform:uppercase;letter-spacing:3px;color:#4b5563;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,0.06)">17 reglas de deteccion (click para ver)</summary>
         <table style="font-size:10px;margin-top:8px">
@@ -311,7 +311,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
   <h2>KYC Screener — Top 10 Casos Riesgo ALTO</h2>
   <div class="grid-2">
     <div>
-      <h3>Distribucion por Riesgo (341 casos)</h3>
+      <h3>Distribucion por Riesgo (187 casos)</h3>
       <div class="chart-container"><canvas id="chartRisk"></canvas></div>
       <p style="font-size:10px;color:#6b7280;margin-top:8px">* Medibles: solicitudes con al menos 2 meses de vida en cartera<br>** FPD 30+: cliente que no pago su primera cuota y acumulo >30 dias de atraso</p>
     </div>
@@ -319,23 +319,23 @@ tr:hover td{background:rgba(255,255,255,0.02)}
       <h3>Casos mas criticos detectados</h3>
       <table style="font-size:11px">
         <tr><th>#</th><th>Pts</th><th>Anomalias clave</th></tr>
-        <tr><td>1</td><td class="red">14</td><td>Sueldo varia 1,151-9,500 (8.3x); 2 empleadores distintos; doc a nombre de otro</td></tr>
-        <tr><td>2</td><td class="red">12</td><td>Doc a nombre de otro; DNI en doc != solicitante; Equifax OCR score bajo</td></tr>
-        <tr><td>3</td><td class="red">11</td><td>Sueldo varia 600-1,235 (2.1x); RCI en doc 42% (>40%); Score 211; Keynua error</td></tr>
-        <tr><td>4</td><td class="red">10</td><td>Doc a nombre de otro; DNI en doc = 00000000; sin score; sin arbol</td></tr>
-        <tr><td>5</td><td class="red">10</td><td>Sueldo varia 1-1,200 (1,263x); Boleta S/59 vs sueldo S/575; Equifax OCR 228</td></tr>
-        <tr><td>6</td><td class="red">10</td><td>Sueldo varia 1,140-1,520; DNI en doc != solicitante; Equifax OCR score bajo</td></tr>
-        <tr><td>7</td><td class="num">9</td><td>DNI en doc != solicitante; Boletas S/4,026 vs sueldo declarado distinto</td></tr>
-        <tr><td>8</td><td class="num">8</td><td>Doc a nombre de otro; RCI en doc 56% (>40%); Equifax OCR 362</td></tr>
-        <tr><td>9</td><td class="num">8</td><td>DNI en doc = 00000000; RCI en doc 47% (>40%); sin score</td></tr>
-        <tr><td>10</td><td class="num">8</td><td>2 empleadores distintos; RCI en doc 43%; 2 RUCs distintos</td></tr>
+        <tr><td>1</td><td class="red">16</td><td>Sueldo varia 1,425-4,560 (3.2x); DNI doc != solicitante; RCI 56%; EQF OCR bajo</td></tr>
+        <tr><td>2</td><td class="red">13</td><td>Sueldo varia 1,425-1,900; 2 empleadores; doc a nombre de otro; DNI doc != solicitante</td></tr>
+        <tr><td>3</td><td class="red">13</td><td>Sueldo varia 1-665 (700x); DNI doc != solicitante; 3 RUCs; rechazo 7/8</td></tr>
+        <tr><td>4</td><td class="red">12</td><td>Sueldo varia 974-1,425; DNI doc != solicitante; EQF OCR 250; 5 RUCs</td></tr>
+        <tr><td>5</td><td class="red">12</td><td>Sueldo varia 1,900-3,040 (1.6x); DNI doc != solicitante; RCI 52%; 4 RUCs</td></tr>
+        <tr><td>6</td><td class="red">12</td><td>Sueldo varia 1,900-2,565; doc a nombre de otro; DNI doc != solicitante; EQF OCR bajo</td></tr>
+        <tr><td>7</td><td class="red">12</td><td>Doc a nombre de otro; DNI doc != solicitante; EQF OCR 283; sin score</td></tr>
+        <tr><td>8</td><td class="num">11</td><td>Sueldo varia 1-1,001 (1,054x); 2 RUCs; rechazo 4/5; edad 18; score 216</td></tr>
+        <tr><td>9</td><td class="num">11</td><td>Sueldo varia 2,000-4,397 (2.2x); doc a nombre de otro; DNI doc != solicitante</td></tr>
+        <tr><td>10</td><td class="num">11</td><td>Sueldo varia 3,040-5,000 (1.6x); DNI doc != solicitante; EQF OCR 346; 3 RUCs</td></tr>
       </table>
       <div class="card" style="margin-top:12px;padding:12px;border-color:rgba(34,197,94,0.3)">
         <h4 style="font-size:12px" class="green">Valor del analisis profundo</h4>
         <p style="font-size:11px">Las 14 reglas cross-solicitud detectaron patrones que el scoring simple no captura: sueldos que varian 8x entre solicitudes, boletas a nombre de terceros, DNIs de documentos que no coinciden con el solicitante, y RCIs en documentos que exceden el 40% permitido.</p>
       </div>
       <div class="section-divider" style="margin-top:10px">Entregables</div>
-      <p style="font-size:11px"><code>KYC_BATCH_120_CASOS.xlsx</code> (4 hojas: Detalle 341 casos con 23 columnas, Resumen por Riesgo con FPD, Anomalias Frecuentes, Casos Riesgo ALTO) + 3 scorecards individuales (.md)</p>
+      <p style="font-size:11px"><code>KYC_BATCH_120_CASOS.xlsx</code> (4 hojas: Detalle 187 casos con 23 columnas, Resumen por Riesgo con FPD, Anomalias Frecuentes, Casos Riesgo ALTO) + 3 scorecards individuales (.md)</p>
     </div>
   </div>
 </div>
