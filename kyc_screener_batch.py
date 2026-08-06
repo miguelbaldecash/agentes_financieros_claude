@@ -40,6 +40,9 @@ PSQL_CONN = "host=airtable-sync.cluster-ckkmmadckjbw.us-east-1.rds.amazonaws.com
 
 OUTPUT = r"C:\Users\USER\Documents\Agente de Finanzas\KYC_BATCH_120_CASOS.xlsx"
 
+# DNIs de representantes BaldeCash que aparecen en contratos — excluir de R4
+DNIS_BALDECASH = {'10314652', '14402096', '14511932'}  # Montenegro, rep legal 1, rep legal 2
+
 # ============================================================
 # HELPERS
 # ============================================================
@@ -255,8 +258,8 @@ def score14(pid, sols, ocr_map):
     if len(nombres_no_match) >= 2: pts += 4; anomalies.append(f"R3: Docs de {len(nombres_no_match)} personas")
     elif len(nombres_no_match) == 1: pts += 2; anomalies.append(f"R3: Doc a nombre de otro")
 
-    # R4: DNI en doc != solicitante
-    dnis_mismatch = [d for d in dnis_ocr if d != dni_sol and len(d) >= 7]
+    # R4: DNI en doc != solicitante (excluir DNIs de representantes BaldeCash)
+    dnis_mismatch = [d for d in dnis_ocr if d != dni_sol and len(d) >= 7 and d not in DNIS_BALDECASH]
     if dnis_mismatch: pts += 3; anomalies.append(f"R4: DNI doc != solicitante")
 
     # R5: Boletas vs sueldo declarado
