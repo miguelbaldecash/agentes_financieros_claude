@@ -284,17 +284,14 @@ tr:hover td{background:rgba(255,255,255,0.02)}
       <p style="font-size:10px;color:#6b7280;margin-top:6px">La solicitante declaro un sueldo que coincide exactamente con la boleta de otra persona. El OCR detecto que el nombre en el documento no corresponde al solicitante.</p>
     </div>
     <div>
-      <h4 style="color:#93c5fd;margin-bottom:8px">7 Documentos OCR Analizados</h4>
+      <h4 style="color:#93c5fd;margin-bottom:8px">Analisis OCR — Documentos clave</h4>
       <table style="font-size:11px">
         <tr><th>Doc</th><th>Tipo</th><th>Hallazgo</th></tr>
         <tr><td>Boleta mayo</td><td>Sustento ingresos</td><td class="red">R3: Nombre DIAZ TRUJILLO != solicitante VALDIVIA RAMIREZ</td></tr>
-        <tr><td>AFP</td><td>Previsional</td><td>Sin datos extraidos</td></tr>
-        <tr><td>Recibo servicios</td><td>Domicilio</td><td>Sin datos extraidos</td></tr>
-        <tr><td>Evidencia estudios</td><td>Constancia</td><td>Sin datos extraidos</td></tr>
-        <tr><td>OSIPTEL</td><td>Lineas telef.</td><td>DNI confirmado</td></tr>
-        <tr><td>Equifax</td><td>Central riesgo</td><td>Sin datos extraidos del OCR</td></tr>
-        <tr><td>RCI 22.20</td><td>Calculo interno</td><td>RCI 22.20% (dentro de politica)</td></tr>
+        <tr><td>OSIPTEL</td><td>Lineas telef.</td><td class="green">DNI solicitante confirmado</td></tr>
+        <tr><td>RCI 22.20</td><td>Calculo interno</td><td class="green">RCI 22.20% (dentro de politica)</td></tr>
       </table>
+      <p style="font-size:10px;color:#6b7280;margin-top:4px">7 docs subidos en total. Los demas (AFP, recibo servicios, constancia estudios, Equifax) no contienen campos de nombre/empleador relevantes para el cruce.</p>
       <div class="card" style="margin-top:12px;padding:12px;border-color:rgba(239,68,68,0.2);background:rgba(239,68,68,0.03)">
         <h4 style="font-size:12px" class="red">Por que este caso es un verdadero positivo</h4>
         <p style="font-size:11px">La solicitante presento como sustento de ingresos la boleta de pago de <strong>otra persona</strong> (Diaz Trujillo Mayte Anais, empleada de MED PLASTIC). El sueldo declarado (S/ 1,753) coincide exactamente con el monto de la boleta ajena (S/ 1,753.46). La solicitud fue aprobada y el equipo entregado. <strong>Un cruce automatico nombre-solicitante vs nombre-en-boleta habria bloqueado esta aprobacion.</strong></p>
