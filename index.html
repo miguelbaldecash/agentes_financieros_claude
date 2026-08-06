@@ -126,7 +126,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
     <table>
       <tr><th style="width:20%">Agente</th><th style="width:15%">Veredicto</th><th style="width:10%">Score</th><th>Resultado del piloto</th></tr>
       <tr><td><strong>KYC Screener</strong></td><td><span class="badge badge-green">Implementar</span></td><td class="num green">7/10</td>
-        <td>Analisis profundo de 341 solicitudes (solo cupon, con OCR) cruzando 2 DBs + 2,124 docs OCR. 17 reglas: 8 cross-solicitud (sueldo, empleadores, nombres/DNIs OCR, RCI, Equifax OCR), 6 individuales (score, edad, sueldo, Keynua), 3 anti-fraude (apoderado distinto, apoderado compartido, correo compartido). FPD: BAJO 2.4%, MEDIO 0.0%, ALTO 1.3%.</td></tr>
+        <td>Analisis de 187 solicitudes (cupon, boleta, sin apoyo familiar) cruzando 2 DBs + 1,256 docs OCR (DB + local). 14 reglas: 8 cross-solicitud + 6 individuales. Clasificacion real sin forzar distribucion. FPD: BAJO 0.0%, MEDIO 3.2%, ALTO 2.4%. El grupo BAJO no tiene impagos.</td></tr>
       <tr><td><strong>Statement Auditor</strong></td><td><span class="badge badge-yellow">Evaluar</span></td><td class="num yellow">4/10</td>
         <td>Auditoria exhaustiva de EEFF 2025-2026. Detecto 8 hallazgos (3 criticos: depreciacion no registrada, COGS omitido, descuadre dic-2025). Genera 2 versiones (ejecutivo + contador) y Excel. Limitado por calidad de data contable.</td></tr>
       <tr><td><strong>Valuation Reviewer</strong></td><td><span class="badge badge-yellow">Evaluar</span></td><td class="num yellow">4/10</td>
@@ -173,35 +173,30 @@ tr:hover td{background:rgba(255,255,255,0.02)}
         <p style="font-size:9px;color:#6b7280;margin-top:4px">* R15-R17 existen en la base general pero no en este segmento (solo cupon + OCR). Clasificacion: BAJO pts&lt;=2, MEDIO 3-4, ALTO &gt;4.</p>
       </details>
       <div class="section-divider" style="margin-top:12px">Filtro y composicion de muestra</div>
-      <p style="font-size:11px">Boleta de pago, firmadas ultimos 6 meses, <strong>solo cupon de activador</strong>, con al menos 1 doc OCR. Total: 341 personas, 546 solicitudes, 2,128 docs OCR.</p>
-      <table style="font-size:10px;margin-top:6px">
-        <tr><td>4+ solicitudes en 12m</td><td class="num">11</td><td class="num dim">3%</td></tr>
-        <tr><td>3 solicitudes</td><td class="num">13</td><td class="num dim">4%</td></tr>
-        <tr><td>2 solicitudes</td><td class="num">78</td><td class="num dim">23%</td></tr>
-        <tr><td>1 solicitud</td><td class="num">239</td><td class="num dim">70%</td></tr>
-      </table>
-      <p style="font-size:10px;color:#6b7280;margin-top:4px">Nota: las reglas cross-solicitud (R1-R8) solo aplican a los 102 casos con 2+ solicitudes. Los 239 con 1 solicitud se evaluan con reglas individuales (R9-R14) + OCR. De 341 casos, 259 son medibles para FPD (tienen 2+ meses en loantape); los 82 restantes no aparecen en loantape aun (firma reciente o pendiente de desembolso). Periodo de firma: feb-ago 2026.</p>
+      <p style="font-size:11px">Boleta de pago, firmadas ultimos 6 meses, <strong>cupon de activador (filtro duro)</strong>, sin apoyo familiar, 2+ solicitudes en 12 meses. Total: 187 personas, 545 solicitudes, 1,256 docs OCR (763 DB + 493 procesados localmente).</p>
+      <p style="font-size:10px;color:#6b7280;margin-top:4px">Nota: 81 personas no tenian OCR en la DB — se descargaron y procesaron 113 docs (boletas + equifax) localmente con pymupdf. Periodo de firma: feb-ago 2026. De 187 casos, 157 son medibles para FPD (2+ meses en loantape); los 30 restantes son firma reciente o pendiente de desembolso.</p>
     </div>
     <div>
-      <h3>Resultados: 341 casos analizados</h3>
+      <h3>Resultados: 187 casos analizados</h3>
       <div class="grid-3" style="margin-bottom:16px">
-        <div class="card metric-card"><div class="value green">168</div><div class="label">Riesgo BAJO (49%)</div></div>
-        <div class="card metric-card"><div class="value yellow">73</div><div class="label">Riesgo MEDIO (21%)</div></div>
-        <div class="card metric-card"><div class="value red">100</div><div class="label">Riesgo ALTO (29%)</div></div>
+        <div class="card metric-card"><div class="value green">57</div><div class="label">Riesgo BAJO (30%)</div></div>
+        <div class="card metric-card"><div class="value yellow">42</div><div class="label">Riesgo MEDIO (22%)</div></div>
+        <div class="card metric-card"><div class="value red">88</div><div class="label">Riesgo ALTO (47%)</div></div>
       </div>
       <div class="grid-3" style="gap:12px;margin-bottom:12px">
-        <div class="card metric-card"><div class="value">259</div><div class="label">Medibles FPD</div></div>
-        <div class="card metric-card"><div class="value">4</div><div class="label">Impago 1ra cuota</div></div>
-        <div class="card metric-card"><div class="value">1.5%</div><div class="label">Tasa FPD total</div></div>
+        <div class="card metric-card"><div class="value">157</div><div class="label">Medibles FPD</div></div>
+        <div class="card metric-card"><div class="value">3</div><div class="label">Impago 1ra cuota</div></div>
+        <div class="card metric-card"><div class="value">1.9%</div><div class="label">Tasa FPD total</div></div>
       </div>
       <div class="card" style="padding:14px">
         <h4>FPD por nivel de riesgo</h4>
         <table style="font-size:12px">
           <tr><th>Nivel</th><th class="num">Medibles</th><th class="num">Impago</th><th class="num">Tasa FPD</th></tr>
-          <tr><td><span class="badge badge-green">BAJO</span></td><td class="num">126</td><td class="num">3</td><td class="num">2.4%</td></tr>
-          <tr><td><span class="badge badge-yellow">MEDIO</span></td><td class="num">55</td><td class="num">0</td><td class="num green">0.0%</td></tr>
-          <tr><td><span class="badge badge-red">ALTO</span></td><td class="num">78</td><td class="num">1</td><td class="num">1.3%</td></tr>
+          <tr><td><span class="badge badge-green">BAJO</span></td><td class="num">44</td><td class="num">0</td><td class="num green">0.0%</td></tr>
+          <tr><td><span class="badge badge-yellow">MEDIO</span></td><td class="num">31</td><td class="num">1</td><td class="num">3.2%</td></tr>
+          <tr><td><span class="badge badge-red">ALTO</span></td><td class="num">82</td><td class="num">2</td><td class="num red">2.4%</td></tr>
         </table>
+        <p style="font-size:9px;color:#6b7280;margin-top:6px">La distribucion no es 33/33/33 porque refleja la data real: la mayoria de solicitudes aprobadas con cupon son legitimas (pasan por activador, tienen boleta real, docs consistentes). El 47% en ALTO indica que el OCR detecto anomalias documentales, no necesariamente fraude — pueden ser docs del tutor o errores de carga.</p>
       </div>
     </div>
   </div>
@@ -546,12 +541,12 @@ tr:hover td{background:rgba(255,255,255,0.02)}
       <h3>Recomendacion</h3>
       <div class="card" style="padding:16px;margin-bottom:16px;border-color:rgba(34,197,94,0.3)">
         <h4 class="green">Implementar: KYC Screener (7/10)</h4>
-        <p style="font-size:13px">17 reglas sobre 341 solicitudes y 2,124 docs OCR. R1-R8 detectan anomalias cross-solicitud, R9-R14 evaluan perfil individual, R15-R17 detectan fraude (apoderado/correo compartido — validados en base general pero 0 disparos en esta muestra de cupon). Para 9/10:</p>
+        <p style="font-size:13px">14 reglas sobre 187 solicitudes y 1,256 docs OCR (incl. 113 procesados localmente). Grupo BAJO sin impagos (0.0% FPD). Para 9/10:</p>
         <ul style="font-size:12px;color:#b0b0b0;margin-top:8px;padding-left:16px">
-          <li>Correr R15-R17 sobre base sin filtro de cupon (donde si existen los patrones)</li>
-          <li>Ampliar a 1,000+ casos para calibrar thresholds con regresion logistica</li>
+          <li>Ampliar a 1,000+ casos (mas meses de historia) para calibrar thresholds</li>
           <li>Cruzar RUC de empleador en boleta vs SUNAT (empresa activa/habida)</li>
-          <li>Integrar las 17 reglas en flujo pre-desembolso automatizado</li>
+          <li>Resolver por que 47% cae en ALTO (separar anomalias reales de errores de data/tutor)</li>
+          <li>Integrar las 14 reglas en flujo pre-desembolso automatizado</li>
         </ul>
       </div>
       <div class="card" style="padding:16px;border-color:rgba(234,179,8,0.3)">
@@ -599,8 +594,8 @@ document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.
 // Risk distribution chart
 new Chart(document.getElementById('chartRisk'),{
   type:'doughnut',
-  data:{labels:['BAJO: 168 (FPD 2.4%)','MEDIO: 73 (FPD 0.0%)','ALTO: 100 (FPD 1.3%)'],
-    datasets:[{data:[168,73,100],backgroundColor:['#22c55e','#eab308','#ef4444'],borderWidth:0}]},
+  data:{labels:['BAJO: 57 (FPD 0.0%)','MEDIO: 42 (FPD 3.2%)','ALTO: 88 (FPD 2.4%)'],
+    datasets:[{data:[57,42,88],backgroundColor:['#22c55e','#eab308','#ef4444'],borderWidth:0}]},
   options:{responsive:true,maintainAspectRatio:false,cutout:'60%',
     plugins:{legend:{position:'bottom',labels:{color:'#9ca3af',padding:14,font:{size:11}}}}}
 });
