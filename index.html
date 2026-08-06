@@ -258,53 +258,46 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 
 <!-- ==================== SLIDE 5: KYC SCREENER - CASO ALTO REAL ==================== -->
 <div class="slide" id="s5">
-  <h2>KYC Screener — Caso Riesgo ALTO: Solicitud #97072 (16 pts)</h2>
+  <h2>KYC Screener — Caso Riesgo ALTO: Solicitud #116641</h2>
   <div class="grid-2">
     <div>
       <div class="card" style="padding:14px;margin-bottom:14px;border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.04)">
         <table style="font-size:12px">
-          <tr><td>Solicitante</td><td>M. C. C. (anonimizado), 48 anos</td></tr>
-          <tr><td>Departamento</td><td>Lambayeque</td></tr>
-          <tr><td>Sueldo declarado</td><td>S/ 3,325.00</td></tr>
-          <tr><td>Score admision</td><td>564</td></tr>
-          <tr><td>Cupon activador</td><td class="green">Si (1140)</td></tr>
+          <tr><td>Solicitante</td><td>J. V. R. (anonimizado), 21 anos</td></tr>
+          <tr><td>Departamento</td><td>Lima</td></tr>
+          <tr><td>Sueldo declarado</td><td>S/ 1,753.00</td></tr>
+          <tr><td>Score admision</td><td>304</td></tr>
+          <tr><td>Cupon activador</td><td class="green">Si (4596)</td></tr>
           <tr><td>Tipo renta</td><td class="green">Boleta de pago</td></tr>
-          <tr><td>Status</td><td>Aprobado, firmado, entregado</td></tr>
-          <tr class="total-row"><td>Veredicto</td><td><span class="badge badge-red">RIESGO ALTO</span> — 16 puntos</td></tr>
+          <tr><td>Apoyo familiar</td><td class="green">No</td></tr>
+          <tr><td>Status</td><td>Aprobado, firmado, <strong>entregado</strong></td></tr>
+          <tr class="total-row"><td>Veredicto</td><td><span class="badge badge-red">RIESGO ALTO</span> — boleta de otra persona</td></tr>
         </table>
       </div>
-      <h4 style="color:#ef4444;margin-bottom:8px">Historial de 6 solicitudes</h4>
+      <h4 style="color:#ef4444;margin-bottom:8px">Hallazgo critico: Boleta de pago ajena</h4>
       <table style="font-size:11px">
-        <tr><th>Sol</th><th>Fecha</th><th>Sueldo</th><th>Status</th></tr>
-        <tr><td>#55637</td><td>Abr 2025</td><td>S/ 1,425</td><td>Rechazado</td></tr>
-        <tr><td>#75734</td><td>Sep 2025</td><td class="red">S/ 4,560</td><td>Rechazado</td></tr>
-        <tr><td>#75772</td><td>Sep 2025</td><td class="red">S/ 4,370</td><td>Rechazado</td></tr>
-        <tr><td>#97072</td><td>Mar 2026</td><td>S/ 3,325</td><td class="green">Aprobado</td></tr>
-        <tr><td>#99469</td><td>Abr 2026</td><td class="red">S/ 4,085</td><td>Rechazado</td></tr>
-        <tr><td>#100300</td><td>Abr 2026</td><td class="red">S/ 4,370</td><td>Rechazado</td></tr>
+        <tr><th>Campo</th><th>Solicitud</th><th>Boleta OCR</th><th>Check</th></tr>
+        <tr><td>Nombre</td><td>Julia V.R.</td><td class="red">DIAZ TRUJILLO MAYTE ANAIS</td><td class="red">MISMATCH</td></tr>
+        <tr><td>Empleador</td><td>—</td><td>MED PLASTIC MULTISERVICIOS E.I.R.L</td><td>—</td></tr>
+        <tr><td>Monto boleta</td><td>S/ 1,753</td><td>S/ 1,753.46</td><td class="yellow">Coincide (sospechoso)</td></tr>
       </table>
-      <p style="font-size:10px;color:#6b7280;margin-top:6px">R1: Sueldo varia S/ 1,425 — S/ 4,560 (3.2x entre solicitudes)</p>
+      <p style="font-size:10px;color:#6b7280;margin-top:6px">La solicitante declaro un sueldo que coincide exactamente con la boleta de otra persona. El OCR detecto que el nombre en el documento no corresponde al solicitante.</p>
     </div>
     <div>
-      <h4 style="color:#93c5fd;margin-bottom:8px">7 Documentos OCR Analizados (procesados localmente)</h4>
+      <h4 style="color:#93c5fd;margin-bottom:8px">7 Documentos OCR Analizados</h4>
       <table style="font-size:11px">
         <tr><th>Doc</th><th>Tipo</th><th>Hallazgo</th></tr>
-        <tr><td>Boleta pago</td><td>Sustento ingresos</td><td class="red">R4: 2 DNIs en el doc (solicitante + otro)</td></tr>
-        <tr><td>OSIPTEL</td><td>Lineas telef.</td><td>DNI solicitante confirmado</td></tr>
-        <tr><td>Equifax</td><td>Central riesgo</td><td class="red">R7: Score 296 (riesgo alto)</td></tr>
-        <tr><td>RCI</td><td>Calculo interno</td><td class="red">R6: RCI 56.46% (excede 40%)</td></tr>
-        <tr><td>Contrato</td><td>Prestamo</td><td>3 RUCs distintos en documentos</td></tr>
-        <tr><td>Cronograma</td><td>Pagos</td><td>Cuota S/ 190</td></tr>
-        <tr><td>Contrato v3</td><td>Prestamo</td><td>2 DNIs adicionales en doc</td></tr>
+        <tr><td>Boleta mayo</td><td>Sustento ingresos</td><td class="red">R3: Nombre DIAZ TRUJILLO != solicitante VALDIVIA RAMIREZ</td></tr>
+        <tr><td>AFP</td><td>Previsional</td><td>Sin datos extraidos</td></tr>
+        <tr><td>Recibo servicios</td><td>Domicilio</td><td>Sin datos extraidos</td></tr>
+        <tr><td>Evidencia estudios</td><td>Constancia</td><td>Sin datos extraidos</td></tr>
+        <tr><td>OSIPTEL</td><td>Lineas telef.</td><td>DNI confirmado</td></tr>
+        <tr><td>Equifax</td><td>Central riesgo</td><td>Sin datos extraidos del OCR</td></tr>
+        <tr><td>RCI 22.20</td><td>Calculo interno</td><td>RCI 22.20% (dentro de politica)</td></tr>
       </table>
       <div class="card" style="margin-top:12px;padding:12px;border-color:rgba(239,68,68,0.2);background:rgba(239,68,68,0.03)">
-        <h4 style="font-size:12px" class="red">Anomalias detectadas (6 reglas disparadas)</h4>
-        <p style="font-size:11px"><strong>R1:</strong> Sueldo varia 3.2x entre solicitudes (S/ 1,425 a S/ 4,560)<br>
-        <strong>R4:</strong> DNI en boleta no coincide con solicitante<br>
-        <strong>R6:</strong> RCI en documento = 56.46% (excede politica de 40%)<br>
-        <strong>R7:</strong> Score Equifax OCR = 296 (riesgo alto)<br>
-        <strong>R8:</strong> 3 RUCs distintos en documentos<br>
-        Este caso fue aprobado a pesar de las multiples anomalias. El cruce automatico de OCR habria detectado estos patrones antes de la aprobacion.</p>
+        <h4 style="font-size:12px" class="red">Por que este caso es un verdadero positivo</h4>
+        <p style="font-size:11px">La solicitante presento como sustento de ingresos la boleta de pago de <strong>otra persona</strong> (Diaz Trujillo Mayte Anais, empleada de MED PLASTIC). El sueldo declarado (S/ 1,753) coincide exactamente con el monto de la boleta ajena (S/ 1,753.46). La solicitud fue aprobada y el equipo entregado. <strong>Un cruce automatico nombre-solicitante vs nombre-en-boleta habria bloqueado esta aprobacion.</strong></p>
       </div>
     </div>
   </div>
