@@ -256,51 +256,55 @@ tr:hover td{background:rgba(255,255,255,0.02)}
   </div>
 </div>
 
-<!-- ==================== SLIDE 5: KYC SCREENER - CASO FRAUDE OCR ==================== -->
+<!-- ==================== SLIDE 5: KYC SCREENER - CASO ALTO REAL ==================== -->
 <div class="slide" id="s5">
-  <h2>KYC Screener — Deteccion de Inconsistencia OCR: Solicitud #118669</h2>
+  <h2>KYC Screener — Caso Riesgo ALTO: Solicitud #97072 (16 pts)</h2>
   <div class="grid-2">
     <div>
       <div class="card" style="padding:14px;margin-bottom:14px;border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.04)">
         <table style="font-size:12px">
-          <tr><td>Solicitante</td><td>K. P. G. (anonimizado), 18 anos</td></tr>
-          <tr><td>Sueldo declarado</td><td>S/ 1,327.00</td></tr>
-          <tr><td>Score Equifax</td><td class="red">457 — Riesgo Alto</td></tr>
-          <tr><td>Score admision</td><td class="red">Sin score (NULL)</td></tr>
-          <tr><td>Arbol de decision</td><td class="red">No aplicado</td></tr>
-          <tr><td>Monto financiado</td><td>S/ 5,799.00 (24 cuotas)</td></tr>
-          <tr><td>Status</td><td class="red">Aprobado, firmado, ENTREGADO</td></tr>
-          <tr class="total-row"><td>Veredicto</td><td><span class="badge badge-red">NO APTO</span> — 7 banderas rojas</td></tr>
+          <tr><td>Solicitante</td><td>M. C. C. (anonimizado), 48 anos</td></tr>
+          <tr><td>Departamento</td><td>Lambayeque</td></tr>
+          <tr><td>Sueldo declarado</td><td>S/ 3,325.00</td></tr>
+          <tr><td>Score admision</td><td>564</td></tr>
+          <tr><td>Cupon activador</td><td class="green">Si (1140)</td></tr>
+          <tr><td>Tipo renta</td><td class="green">Boleta de pago</td></tr>
+          <tr><td>Status</td><td>Aprobado, firmado, entregado</td></tr>
+          <tr class="total-row"><td>Veredicto</td><td><span class="badge badge-red">RIESGO ALTO</span> — 16 puntos</td></tr>
         </table>
       </div>
-      <h4 style="color:#ef4444;margin-bottom:8px">3 personas distintas en 1 solicitud</h4>
+      <h4 style="color:#ef4444;margin-bottom:8px">Historial de 6 solicitudes</h4>
       <table style="font-size:11px">
-        <tr><th>Documento</th><th>A nombre de</th><th>DNI</th><th>Check</th></tr>
-        <tr><td>Solicitud</td><td>Kevin P.G.</td><td>61366925</td><td>—</td></tr>
-        <tr><td>Boleta de pago</td><td class="red">Diana G.M.</td><td class="red">40627252</td><td class="red">MISMATCH</td></tr>
-        <tr><td>ESSALUD</td><td class="red">Diana G.M.</td><td class="red">40627252</td><td class="red">MISMATCH</td></tr>
-        <tr><td>Equifax familiar</td><td class="red">Diana G.M.</td><td class="red">40627252</td><td class="red">MISMATCH</td></tr>
-        <tr><td>Recibo de luz</td><td class="red">Alfredo P.Q.</td><td class="red">29728016</td><td class="red">MISMATCH</td></tr>
-        <tr><td>Equifax solicitante</td><td>Kevin P.G.</td><td>61366925</td><td class="green">MATCH</td></tr>
+        <tr><th>Sol</th><th>Fecha</th><th>Sueldo</th><th>Status</th></tr>
+        <tr><td>#55637</td><td>Abr 2025</td><td>S/ 1,425</td><td>Rechazado</td></tr>
+        <tr><td>#75734</td><td>Sep 2025</td><td class="red">S/ 4,560</td><td>Rechazado</td></tr>
+        <tr><td>#75772</td><td>Sep 2025</td><td class="red">S/ 4,370</td><td>Rechazado</td></tr>
+        <tr><td>#97072</td><td>Mar 2026</td><td>S/ 3,325</td><td class="green">Aprobado</td></tr>
+        <tr><td>#99469</td><td>Abr 2026</td><td class="red">S/ 4,085</td><td>Rechazado</td></tr>
+        <tr><td>#100300</td><td>Abr 2026</td><td class="red">S/ 4,370</td><td>Rechazado</td></tr>
       </table>
+      <p style="font-size:10px;color:#6b7280;margin-top:6px">R1: Sueldo varia S/ 1,425 — S/ 4,560 (3.2x entre solicitudes)</p>
     </div>
     <div>
-      <h4 style="color:#93c5fd;margin-bottom:8px">9 Documentos OCR Analizados</h4>
+      <h4 style="color:#93c5fd;margin-bottom:8px">7 Documentos OCR Analizados (procesados localmente)</h4>
       <table style="font-size:11px">
         <tr><th>Doc</th><th>Tipo</th><th>Hallazgo</th></tr>
-        <tr><td>Boleta pago</td><td>Sustento ingresos</td><td class="red">Nombre: DIANA G.M. (familiar, no solicitante)</td></tr>
-        <tr><td>ESSALUD</td><td>Seguro salud</td><td class="red">Asegurada: DIANA G.M. — empleo no es del solicitante</td></tr>
-        <tr><td>Equifax Est.</td><td>Central riesgo</td><td class="yellow">Score 457, sin historial, S/ 0 gasto</td></tr>
-        <tr><td>Equifax Fam.</td><td>Central riesgo</td><td>DIANA G.M. Score 835 (irrelevante para eval.)</td></tr>
-        <tr><td>Recibo luz</td><td>Domicilio</td><td class="red">Titular: ALFREDO P.Q. — 3ra persona</td></tr>
-        <tr><td>OSIPTEL</td><td>Lineas telef.</td><td>2 lineas a nombre del solicitante</td></tr>
-        <tr><td>AFP</td><td>Previsional</td><td>OCR parcial</td></tr>
-        <tr><td>RCI</td><td>Calculo interno</td><td>12.21% — basado en ingreso no verificado</td></tr>
-        <tr><td>Estudios</td><td>Video</td><td>No procesable por OCR</td></tr>
+        <tr><td>Boleta pago</td><td>Sustento ingresos</td><td class="red">R4: 2 DNIs en el doc (solicitante + otro)</td></tr>
+        <tr><td>OSIPTEL</td><td>Lineas telef.</td><td>DNI solicitante confirmado</td></tr>
+        <tr><td>Equifax</td><td>Central riesgo</td><td class="red">R7: Score 296 (riesgo alto)</td></tr>
+        <tr><td>RCI</td><td>Calculo interno</td><td class="red">R6: RCI 56.46% (excede 40%)</td></tr>
+        <tr><td>Contrato</td><td>Prestamo</td><td>3 RUCs distintos en documentos</td></tr>
+        <tr><td>Cronograma</td><td>Pagos</td><td>Cuota S/ 190</td></tr>
+        <tr><td>Contrato v3</td><td>Prestamo</td><td>2 DNIs adicionales en doc</td></tr>
       </table>
       <div class="card" style="margin-top:12px;padding:12px;border-color:rgba(239,68,68,0.2);background:rgba(239,68,68,0.03)">
-        <h4 style="font-size:12px" class="red">Por que este caso es critico</h4>
-        <p style="font-size:11px">Solicitante de 18 anos presento boleta de pago y ESSALUD de un familiar (madre probable) como sustento propio de ingresos. El recibo de luz pertenece a una tercera persona. La solicitud fue aprobada sin score y sin arbol de decision, con un equipo de S/ 5,799 ya entregado. <strong>El cruce automatico de OCR habria detectado esto antes de la aprobacion.</strong></p>
+        <h4 style="font-size:12px" class="red">Anomalias detectadas (6 reglas disparadas)</h4>
+        <p style="font-size:11px"><strong>R1:</strong> Sueldo varia 3.2x entre solicitudes (S/ 1,425 a S/ 4,560)<br>
+        <strong>R4:</strong> DNI en boleta no coincide con solicitante<br>
+        <strong>R6:</strong> RCI en documento = 56.46% (excede politica de 40%)<br>
+        <strong>R7:</strong> Score Equifax OCR = 296 (riesgo alto)<br>
+        <strong>R8:</strong> 3 RUCs distintos en documentos<br>
+        Este caso fue aprobado a pesar de las multiples anomalias. El cruce automatico de OCR habria detectado estos patrones antes de la aprobacion.</p>
       </div>
     </div>
   </div>
